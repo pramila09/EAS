@@ -41,18 +41,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="@drawable/buttonstylepink"
+                android:background="@drawable/buttonstyle2"
                 android:text="Learn More"
                 android:textColor="#fff" />
 
-            <Button
-                android:id="@+id/btnjoin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:background="@drawable/buttonstyle2"
-                android:text="JOIN US"
-                android:textColor="#fff" />
 
         </LinearLayout>
 
@@ -63,12 +55,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <EditText
-            android:id="@+id/Editetxtusername"
+            android:id="@+id/Edittextemail"
             android:drawableLeft="@drawable/ic_person_outline_black_24dp"
             android:padding="10dp"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:hint="USERNAME" />
+            android:hint="EMAIL ADDRESS" />
         <EditText
             android:id="@+id/Edittextpassword"
             android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
@@ -79,6 +71,7 @@
             android:inputType="textPassword"
             />
 
+
         <Button
             android:id="@+id/btn"
             android:layout_width="wrap_content"
@@ -87,7 +80,8 @@
             android:background="@drawable/buttonstylepink"
             android:drawableRight="@drawable/ic_send_black_24dp"
             android:text="LOGIN "
-            android:textColor="#fff" />
+            android:textColor="#fff"
+            android:onClick="Login"/>
 
     </LinearLayout>
 </LinearLayout>

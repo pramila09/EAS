@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">EAS</string>
+
+
+    <array name="Gender">
+        <item>Select Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </array>
+
+    <array name="Department">
+        <item>Select Department</item>
+        <item>Architecture</item>
+        <item>Civil</item>
+        <item>Civil and Rural</item>
+        <item>Computer</item>
+        <item>Electronics and Communication</item>
+    </array>
 </resources>

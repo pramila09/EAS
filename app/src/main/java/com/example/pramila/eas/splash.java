@@ -17,7 +17,6 @@ public class splash extends AppCompatActivity {
         tv = (TextView)findViewById(R.id.tv);
         Animation myanim = AnimationUtils.loadAnimation(this, R.anim.mytransition);
         tv.startAnimation(myanim);
-        tv.startAnimation(myanim);
 
         final Intent i= new Intent(this,MainActivity.class);
         Thread timer = new Thread() {

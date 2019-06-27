@@ -2,10 +2,14 @@ package com.example.pramila.eas;
 
 import android.app.usage.UsageEvents;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
@@ -17,7 +21,7 @@ import java.util.Locale;
 
 public class homepage extends AppCompatActivity {
 
-    private
+
 
     //CalendarView compactCalendar;
     //private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM - yyyy", Locale.getDefault());
@@ -26,6 +30,31 @@ public class homepage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
+        BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
+        NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch(menuItem.getItemId()){
+                    case R.id.Home:
+                        break;
+                    case R.id.Apply_Leave:
+                        Intent a = new Intent(homepage.this, leave.class);
+                        startActivity(a);
+                        break;
+                    case R.id.Notification:
+                        Intent b = new Intent(homepage.this, notification.class);
+                        startActivity(b);
+                        break;
+                    case R.id.Profile:
+                        Intent c = new Intent(homepage.this, profile.class);
+                        startActivity(c);
+                        break;
+                }
+                return false;
+            }
+        });
+
 
 
 
