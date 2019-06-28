@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
@@ -23,7 +24,9 @@ public class homepage extends AppCompatActivity {
 
 
 
-    //CalendarView compactCalendar;
+
+
+        //CalendarView compactCalendar;
     //private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM - yyyy", Locale.getDefault());
 
     @Override
@@ -31,8 +34,13 @@ public class homepage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
+        BottomNavigationView mButtonNavigationView;
         BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
-        NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        BottomNavigationView bottomNavigationView;
+        bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.NavBot);
+        bottomNavigationView.setSelectedItemId(R.id.home);
+       NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch(menuItem.getItemId()){
@@ -54,6 +62,7 @@ public class homepage extends AppCompatActivity {
                 return false;
             }
         });
+
 
 
 

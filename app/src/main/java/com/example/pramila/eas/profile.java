@@ -25,22 +25,26 @@ public class profile extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
+        BottomNavigationView bottomNavigationView;
+        bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.NavBot);
+        bottomNavigationView.setSelectedItemId(R.id.Profile);
         NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch(menuItem.getItemId()){
+                switch (menuItem.getItemId()) {
                     case R.id.Home:
-                        Intent d = new Intent(profile.this, homepage.class);
-                        startActivity(d);
+                        Intent a = new Intent(profile.this, homepage.class);
+                        startActivity(a);
                         break;
                     case R.id.Apply_Leave:
-                        Intent a = new Intent(profile.this, leave.class);
-                        startActivity(a);
+                        Intent b = new Intent(profile.this, leave.class);
+                        startActivity(b);
 
                         break;
                     case R.id.Notification:
-                        Intent b = new Intent(profile.this, notification.class);
-                        startActivity(b);
+                        Intent c = new Intent(profile.this, notification.class);
+                        startActivity(c);
                         break;
                     case R.id.Profile:
                         break;
@@ -48,6 +52,7 @@ public class profile extends AppCompatActivity {
                 return false;
             }
         });
+
 
         Button logout = (Button)findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +69,7 @@ public class profile extends AppCompatActivity {
                        MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                Toast.makeText(profile.this, "You are logged out",Toast.LENGTH_LONG).show();
+                Toast.makeText(profile.this, "You are logged out",Toast.LENGTH_SHORT).show();
 
 
             }

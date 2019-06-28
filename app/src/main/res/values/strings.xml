@@ -2,11 +2,11 @@
     <string name="app_name">EAS</string>
 
 
-    <array name="Gender">
-        <item>Select Gender</item>
-        <item>Male</item>
-        <item>Female</item>
-        <item>Other</item>
+    <array name="leave">
+        <item>Annual Leave</item>
+        <item>Casual Leave</item>
+        <item>Family Leave</item>
+        <item>Holiday Leave</item>
     </array>
 
     <array name="Department">

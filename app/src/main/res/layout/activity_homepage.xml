@@ -62,7 +62,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         design:itemTextColor="@color/colorPrimaryDark"
-        design:menu="@menu/menu_nav" />
+        design:menu="@menu/menu_nav"
+        design:itemIconTint="@drawable/selector"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

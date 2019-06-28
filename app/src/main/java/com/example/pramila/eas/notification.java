@@ -15,6 +15,10 @@ public class notification extends AppCompatActivity {
         setContentView(R.layout.activity_notification);
 
         BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
+        BottomNavigationView bottomNavigationView;
+        bottomNavigationView = (BottomNavigationView)
+                findViewById(R.id.NavBot);
+        bottomNavigationView.setSelectedItemId(R.id.Notification);
         NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
