@@ -24,7 +24,7 @@ public class notification extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch(menuItem.getItemId()){
                     case R.id.Home:
-                        Intent d = new Intent(notification.this, homepage.class);
+                        Intent d = new Intent(notification.this, Homepage.class);
                         startActivity(d);
                         break;
 
@@ -36,7 +36,7 @@ public class notification extends AppCompatActivity {
 
                         break;
                     case R.id.Profile:
-                        Intent c = new Intent(notification.this, homepage.class);
+                        Intent c = new Intent(notification.this, Homepage.class);
                         startActivity(c);
                         break;
                 }

@@ -1,23 +1,16 @@
 package com.example.pramila.eas;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -36,22 +29,21 @@ public class MainActivity extends AppCompatActivity {
     public static final int READ_TIMEOUT = 15000;
 
     private EditText etemail, etpassword;
-
+    private Button btn;
+    private static String URL_LOGIN = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // final EditText editText = (EditText)findViewById(R.id.Edittextemail);
-        // EditText editText1 =(EditText)findViewById(R.id.Edittextpassword);
-
-        final EditText etemail = (EditText) findViewById(R.id.email);
-        final EditText etpassword = (EditText) findViewById(R.id.password);
+        etemail = (EditText) findViewById(R.id.email);
+        etpassword = (EditText) findViewById(R.id.password);
 
 
-        Button btn = (Button) findViewById(R.id.btn);
+        btn = (Button) findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(etemail.getText().length()<=0)
                 {
                     Toast.makeText(MainActivity.this, "Enter email address", Toast.LENGTH_SHORT).show();
@@ -61,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Toast.makeText(MainActivity.this, "Enter password", Toast.LENGTH_SHORT).show();
                 }else {
-                    Intent intent = new Intent(view.getContext(), homepage.class);
-                    view.getContext().startActivity(intent);
+                    checkLogin(view);
                 }
             }
         });
@@ -77,9 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void checkLogin(View arg0) {
+   public void checkLogin(View arg0) {
         final String email = etemail.getText().toString();
         final String password = etpassword.getText().toString();
+       Toast.makeText(getApplicationContext(),"result: connecting",Toast.LENGTH_LONG).show();
+
+
 
         new AsyncLogin().execute(email, password);
     }
@@ -94,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://10.0.2.2/EmpAdmin/login.php");
+                url = new URL("http://192.168.1.119:8080/EmpAdmin/login.php");
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -172,24 +166,31 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             pdLoading.dismiss();
+            Toast.makeText(getApplicationContext(),"result:"+result,Toast.LENGTH_LONG).show();
+            Log.e("eas","Result: "+result);
+            Log.e("eas","true found"+result);
 
-            if (result.equalsIgnoreCase("true")) {
+
+            if (result.contains("true")) {
                 /* Here launching another activity when login successful. If you persist login state
                 use sharedPreferences of Android. and logout button to clear sharedPreferences.
                  */
 
-                Intent intent = new Intent(MainActivity.this, homepage.class);
+               Intent intent = new Intent(MainActivity.this, Homepage.class);
                 startActivity(intent);
                 MainActivity.this.finish();
+                Log.e("eas","true found"+result);
 
-            } else if (result.equalsIgnoreCase("false")) {
+
+
+            } else if (result.contains("false")) {
 
                 // If username and password does not match display a error message
                 Toast.makeText(MainActivity.this, "Invalid email or password", Toast.LENGTH_LONG).show();
 
             } else if (result.equalsIgnoreCase("exception") || result.equalsIgnoreCase("unsuccessful")) {
 
-                Toast.makeText(MainActivity.this, "OOPs! Something went wrong. Connection Problem.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "OOPs! Something went wrong. Connection Problem."+result, Toast.LENGTH_LONG).show();
 
             }
         }
@@ -203,9 +204,13 @@ public class MainActivity extends AppCompatActivity {
             pdLoading.setCancelable(false);
             pdLoading.show();
 
+
+
         }
+
     }
 }
+
 
 
 

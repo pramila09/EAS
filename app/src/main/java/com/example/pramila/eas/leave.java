@@ -12,14 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class leave extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "leave";
@@ -42,7 +39,7 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch(menuItem.getItemId()){
                     case R.id.Home:
-                        Intent d = new Intent(leave.this, homepage.class);
+                        Intent d = new Intent(leave.this, Homepage.class);
                         startActivity(d);
                         break;
                     case R.id.Apply_Leave:
@@ -53,7 +50,7 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
                         startActivity(b);
                         break;
                     case R.id.Profile:
-                        Intent c = new Intent(leave.this, homepage.class);
+                        Intent c = new Intent(leave.this, Homepage.class);
                         startActivity(c);
                         break;
                 }

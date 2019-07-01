@@ -1,13 +1,9 @@
 package com.example.pramila.eas;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +30,7 @@ public class profile extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.Home:
-                        Intent a = new Intent(profile.this, homepage.class);
+                        Intent a = new Intent(profile.this, Homepage.class);
                         startActivity(a);
                         break;
                     case R.id.Apply_Leave:
