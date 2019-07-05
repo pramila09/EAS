@@ -22,6 +22,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://192.168.1.119:8080/EmpAdmin/login.php");
+                url = new URL("http://10.0.7.94:8080/EmpAdmin/login.php");
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 MainActivity.this.finish();
                 Log.e("eas","true found"+result);
+                Toast.makeText(MainActivity.this, "Successful login", Toast.LENGTH_LONG).show();
 
 
 

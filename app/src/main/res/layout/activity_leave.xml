@@ -5,7 +5,8 @@
     xmlns:design="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".leave">
+    tools:context=".leave"
+    android:background="#FCF9F9">
 
 
 
@@ -165,7 +166,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         design:itemTextColor="@color/colorPrimaryDark"
-        design:menu="@menu/menu_nav" />
+        design:menu="@menu/menu_nav"
+        android:background="#fff"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

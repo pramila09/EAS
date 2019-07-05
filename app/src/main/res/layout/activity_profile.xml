@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".profile"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FCF9F9">
 
 
     <LinearLayout
@@ -29,7 +30,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:text="Ram Thapa"
+            android:text="name"
             android:textColor="#F3EAE9"
             android:textSize="20sp" />
 
@@ -53,9 +54,10 @@
           android:drawableLeft="@drawable/ic_email_black_24dp"
           />
         <TextView
+            android:id="@+id/tvemail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ram_t@gmail.com"
+            android:text="Email"
             android:textSize="18sp"
             android:textColor="#2E2C2C"/>
         <View
@@ -83,9 +85,10 @@
             android:textSize="13sp" />
 
         <TextView
+            android:id="@+id/tvdept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Computer"
+            android:text="Department"
             android:textColor="#2E2C2C"
             android:textSize="18sp" />
 
@@ -112,9 +115,10 @@
             android:textSize="13sp"
             android:drawableLeft="@drawable/ic_place_black_24dp"/>
         <TextView
+            android:id="@+id/tvaddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dhapasi, Kathmandu"
+            android:text="Address"
             android:textSize="18sp"
             android:textColor="#2E2C2C"/>
         <View
@@ -122,6 +126,33 @@
             android:layout_height="1dp"
             android:layout_marginTop="15dp"
             android:background="#E6E3E3"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="450dp"
+        android:orientation="vertical"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registered Date"
+            android:textSize="13sp"
+            android:drawableLeft="@drawable/ic_date_range_black_24dp"/>
+        <TextView
+            android:id="@+id/tvreg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registered date"
+            android:textSize="18sp"
+            android:textColor="#2E2C2C"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="#E6E3E3"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -153,7 +184,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         design:itemTextColor="@color/colorPrimaryDark"
-        design:menu="@menu/menu_nav" />
+        design:menu="@menu/menu_nav"
+        android:background="#E6E0E0"/>
 
 
 
