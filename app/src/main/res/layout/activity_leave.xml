@@ -100,6 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
+                android:entries="@array/leave"
 
                 ></Spinner>
             <View
@@ -117,6 +118,7 @@
                 android:text="Reason for Leave"/>
 
             <EditText
+                android:id="@+id/description"
                 android:layout_width="420dp"
                 android:layout_height="wrap_content"
                 android:hint="Reson for applying leave"
@@ -125,6 +127,7 @@
                 />
 
             <Button
+                android:id="@+id/btnapply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="110dp"
@@ -132,7 +135,8 @@
                 android:background="@drawable/buttonstylepink"
                 android:text="Apply"
                 android:textColor="#fff"
-                android:drawableRight="@drawable/ic_send_black_24dp"/>
+                android:drawableRight="@drawable/ic_send_black_24dp"
+                />
 
 
 

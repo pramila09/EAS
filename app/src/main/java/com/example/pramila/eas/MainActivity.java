@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://10.0.7.94:8080/EmpAdmin/login.php");
+                url = new URL("http://192.168.1.98:8080/EmpAdmin/login.php");
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
