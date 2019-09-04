@@ -54,19 +54,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <cn.zhaiyifan.rememberedittext.RememberEditText
+
+        <android.support.design.widget.TextInputLayout
+        android:id="@+id/etEmailLayout"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+            >
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/email"
             android:drawableLeft="@drawable/ic_person_outline_black_24dp"
             android:padding="10dp"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:hint="EMAIL ADDRESS"
-            app:autoFill="true"
-            app:autoSave="true"
-            app:rememberCount="3"
-            app:rememberId="email"
+            android:hint="EMAIL ADDRESS"/>
+            //app:autoFill="true"
+           // app:autoSave="true"
+           // app:rememberCount="3"
+          //  app:rememberId="email"
 
             />
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/etPasswordLayout"
@@ -85,6 +92,15 @@
                 android:drawableStart="@drawable/ic_lock_outline_black_24dp"
                 android:drawableLeft="@drawable/ic_lock_outline_black_24dp"/>
         </android.support.design.widget.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/saveLoginCheckBox"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/editTextPassword"
+            android:text="Save Login?"
+            android:textColor="#222020" />
 
 
 

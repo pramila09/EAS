@@ -170,7 +170,8 @@
             android:drawableRight="@drawable/ic_lock_outline_black_24dp"
             android:gravity="center"
             android:text="Log out"
-            android:textColor="#ffff"/>
+            android:textColor="#ffff"
+            android:onClick="logout"/>
     </LinearLayout>
 
 

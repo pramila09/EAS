@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="30dp"
+
             >
 
             <TextView
@@ -130,13 +130,12 @@
                 android:id="@+id/btnapply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="110dp"
                 android:layout_gravity="center"
+                android:layout_marginTop="110dp"
                 android:background="@drawable/buttonstylepink"
-                android:text="Apply"
-                android:textColor="#fff"
                 android:drawableRight="@drawable/ic_send_black_24dp"
-                />
+                android:text="Apply"
+                android:textColor="#fff" />
 
 
 
@@ -157,12 +156,12 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/activityTitle1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
-        android:textSize="30sp"
-        android:id="@+id/activityTitle1"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textSize="30sp" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/NavBot"

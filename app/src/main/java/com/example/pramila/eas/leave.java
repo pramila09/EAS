@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,13 +48,14 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
     private DatePickerDialog.OnDateSetListener mDataSetListener;
     private  DatePickerDialog.OnDateSetListener mDataSetListener1;
     String tempfromdate, temptodate, temptype, tempdescription;
-    String ServerURL = "http://192.168.1.98:8080/EmpAdmin/leave.php";
+    String ServerURL = "http://192.168.1.119:8080/EmpAdmin/leave.php";
     Button btnapply;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave);
+
 
         description = findViewById(R.id.description);
 
@@ -104,8 +106,11 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
 
+
             }
+
         });
+
 
         mDataSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -176,11 +181,15 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
             @Override
             public void onClick(View view) {
 
+
+
                 getdata();
                 InsertData(tempfromdate, temptodate, temptype, tempdescription);
-                //createleave();
+
+            //createleave();
 
             }
+
 
         });
 
@@ -232,6 +241,7 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
                 String todateholder = todate;
                 String typeholder = leavetype;
                 String descriptionholder = description;
+
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 

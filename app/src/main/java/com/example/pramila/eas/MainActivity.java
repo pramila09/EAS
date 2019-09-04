@@ -1,14 +1,18 @@
 package com.example.pramila.eas;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,16 +32,42 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
+    public static final String MyPREFERENCES = "MyPrefs";
+    public static final String Email = "emailKey";
+    public static final String Password = "passwordKey";
 
     private EditText etemail, etpassword;
+    private String username, pass;
     private Button btn;
     private static String URL_LOGIN = "";
+    private CheckBox saveLoginCheckBox;
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
+    private Boolean saveLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         etemail = (EditText) findViewById(R.id.email);
         etpassword = (EditText) findViewById(R.id.password);
+        saveLoginCheckBox = (CheckBox) findViewById(R.id.saveLoginCheckBox);
+        loginPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        if(loginPreferences.getBoolean("logged",false)){
+           Intent intent = new Intent(MainActivity.this, Homepage.class);
+            startActivity(intent);
+            //MainActivity.this.finish();
+        }
+        loginPrefsEditor = loginPreferences.edit();
+
+        saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        if(saveLogin == true){
+            loginPrefsEditor = loginPreferences.edit();
+            etemail.setText(loginPreferences.getString("username", ""));
+            etpassword.setText(loginPreferences.getString("password", ""));
+            saveLoginCheckBox.setChecked(true);
+        }
 
 
         btn = (Button) findViewById(R.id.btn);
@@ -56,7 +86,44 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     checkLogin(view);
                 }
+               /* String e= etemail.getText().toString();
+
+                SharedPreferences.Editor editor = loginPreferences.edit();
+                editor.putString(Email, e);
+
+                if((!etemail.getText().toString().equals(""))&&
+                        (!etpassword.getText().toString().equals(""))){
+
+                    if(saveLoginCheckBox.isChecked()){
+                        Boolean booleanChecked = saveLoginCheckBox.isChecked();
+                        SharedPreferences.Editor editor1  = loginPreferences.edit();
+                        editor1.putString("pref_name", etemail.getText().toString());
+                        editor1.putString("pref_pass",etpassword.getText().toString());
+                        editor1.putBoolean("pref_check", booleanChecked);
+                        editor1.apply();
+
+
+                    }else{
+                        loginPreferences.edit().clear().apply();
+                    }
+                    Log.i("username", etemail.getText().toString());
+                    Log.i("password", etpassword.getText().toString());
+                    Context context = getApplicationContext();
+
+                    String string="Username:" + etemail.getText().toString()
+                            + "\nPassword: "+ etpassword.getText().toString();
+                      Intent intent=new Intent(getBaseContext(),Homepage.class);
+                      intent.putExtra("ux",etemail.getText().toString());
+
+                      startActivity(intent);
+
+
+
+
+                }*/
             }
+
+
         });
         Button btnlearn = (Button) findViewById(R.id.btnlearn);
         btnlearn.setOnClickListener(new View.OnClickListener() {
@@ -69,10 +136,38 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void onStart(){
+        super.onStart();
+        //getUser();
+    }
+
+
+
+
+
    public void checkLogin(View arg0) {
         final String email = etemail.getText().toString();
         final String password = etpassword.getText().toString();
        Toast.makeText(getApplicationContext(),"result: connecting",Toast.LENGTH_LONG).show();
+       if (arg0 == btn) {
+               InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+               imm.hideSoftInputFromWindow(etemail.getWindowToken(), 0);
+
+               username = etemail.getText().toString();
+               pass= etpassword.getText().toString();
+
+
+               if (saveLoginCheckBox.isChecked()) {
+                   loginPrefsEditor.putBoolean("saveLogin", true);
+                   loginPrefsEditor.putString("username", username);
+                   loginPrefsEditor.putString("password", pass);
+                   loginPrefsEditor.commit();
+               } else {
+                   loginPrefsEditor.clear();
+                   loginPrefsEditor.commit();
+               }
+           }
+       loginPreferences.edit().putBoolean("logged",true).apply();
 
 
 
@@ -89,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://192.168.1.98:8080/EmpAdmin/login.php");
+                url = new URL("http://192.168.1.119:8080/EmpAdmin/login.php");
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -177,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
                 use sharedPreferences of Android. and logout button to clear sharedPreferences.
                  */
 
+
                Intent intent = new Intent(MainActivity.this, Homepage.class);
                 startActivity(intent);
                 MainActivity.this.finish();
@@ -211,6 +307,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+   /* public void getUser() {
+
+        SharedPreferences loginPreferences = getSharedPreferences(MyPREFERENCES,MODE_PRIVATE);
+        String username = loginPreferences.getString(Email,null);
+        String password = loginPreferences.getString(Password,null);
+        }
+
+
+    public void rememberMe(String email, String password) {
+        getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit().putString(Email, email).putString(Password, password).commit();
+    }*/
 }
 
 

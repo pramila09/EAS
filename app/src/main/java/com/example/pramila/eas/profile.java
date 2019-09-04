@@ -1,10 +1,13 @@
 package com.example.pramila.eas;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +16,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -36,14 +44,15 @@ public class profile extends AppCompatActivity {
     private TextView tvemail, tvdept, tvaddress, tvreg, tvname;
 
     private static final String TAG = "profile";
+    SharedPreferences sharedpreferences;
+    public static final String MyPREFERENCES = "MyPrefs";
+
+    private static final String url = "http://192.168.1.119:8080/EmpAdmin.profile.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-
-
 
 
         tvemail = findViewById(R.id.tvemail);
@@ -61,8 +70,7 @@ public class profile extends AppCompatActivity {
 
         BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
         BottomNavigationView bottomNavigationView;
-        bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.NavBot);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.NavBot);
         bottomNavigationView.setSelectedItemId(R.id.Profile);
         NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -90,28 +98,38 @@ public class profile extends AppCompatActivity {
 
 
         Button logout = (Button) findViewById(R.id.logout);
-        logout.setOnClickListener(new View.OnClickListener() {
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        //loadProfile();
+    }
+
+    public void logout(View v) {
+        SharedPreferences sharedpreferences = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.clear();
+        editor.commit();
+        Intent i = new Intent(profile.this, MainActivity.class);
+        startActivity(i);
+    }
+}
+
+    /*private void loadProfile() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
-            public void onClick(View arg0) {
-                SharedPreferences myPrefs = getSharedPreferences("MY",
-                        MODE_PRIVATE);
-                SharedPreferences.Editor editor = myPrefs.edit();
-                editor.clear();
-                editor.commit();
-                AppState.getSingleInstance().setLoggingOut(true);
-                Log.d(TAG, "Now log out and start the activity login");
-                Intent intent = new Intent(profile.this,
-                        MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                Toast.makeText(profile.this, "You are logged out", Toast.LENGTH_SHORT).show();
+            public void onResponse(String response) {
+
+
 
 
             }
-        });
+        })
     }
+}
 
-    public void getusername(){
+
+
+
+    /*public void getusername(){
         final String name = tvname.getText().toString();
         new Asyncprofile().execute(name);
 
@@ -141,8 +159,7 @@ public class profile extends AppCompatActivity {
 
     }
 
-    private class Asyncprofile extends AsyncTask<String, String, String> {
-        ProgressDialog pdLoading = new ProgressDialog(profile.this);
+    private class Asyncprofile<GetJSON> extends AsyncTask<String, String, String> {
         HttpURLConnection conn;
         URL url = null;
 
@@ -151,7 +168,7 @@ public class profile extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://10.0.7.94:8080/EmpAdmin/api/profile.php");
+                url = new URL("http://192.168.1.98:8080/EmpAdmin/profile.php");
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -172,7 +189,9 @@ public class profile extends AppCompatActivity {
                 // Append parameters to URL
                 Uri.Builder builder = new Uri.Builder()
                         .appendQueryParameter("username", params[0])
-                        .appendQueryParameter("department", params[1]);
+                        .appendQueryParameter("department", params[1])
+                        .appendQueryParameter("address", params[2])
+                        .appendQueryParameter("registrationdate",params[3]);
 
                 String query = builder.build().getEncodedQuery();
 
@@ -229,11 +248,16 @@ public class profile extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            pdLoading.dismiss();
+
+            tvemail.setText(result);
+            tvdept.setText(result);
+            tvaddress.setText(result);
+            tvreg.setText(result);
+
             Toast.makeText(getApplicationContext(), "result:" + result, Toast.LENGTH_LONG).show();
             Log.e("eas", "Result: " + result);
             Log.e("eas", "true found" + result);
-            
+
         }
 
         @Override
@@ -241,14 +265,15 @@ public class profile extends AppCompatActivity {
             super.onPreExecute();
 
             //this method will be running on UI thread
-            pdLoading.setMessage("\tLoading...");
-            pdLoading.setCancelable(false);
-            pdLoading.show();
+
 
 
         }
+
+
+
     }
-}
+}*/
 
 
 

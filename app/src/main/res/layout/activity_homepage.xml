@@ -21,10 +21,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="110dp"
             android:layout_marginTop="48dp"
+
             android:gravity="center"
-            android:text="Mark Your Attendence"
+
+            android:text="Event Calendar"
             android:textAlignment="center"
             android:textSize="23sp" />
 
