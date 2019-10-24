@@ -46,6 +46,7 @@ public class profile extends AppCompatActivity {
     private static final String TAG = "profile";
     SharedPreferences sharedpreferences;
     public static final String MyPREFERENCES = "MyPrefs";
+    int backButtonCount=0;
 
     private static final String url = "http://192.168.1.119:8080/EmpAdmin.profile.php";
 
@@ -111,7 +112,25 @@ public class profile extends AppCompatActivity {
         Intent i = new Intent(profile.this, MainActivity.class);
         startActivity(i);
     }
+    @Override
+    public void onBackPressed()
+    {
+        if(backButtonCount >= 1)
+        {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else
+        {
+            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
+            backButtonCount++;
+        }
+    }
 }
+
+
 
     /*private void loadProfile() {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {

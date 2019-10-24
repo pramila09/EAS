@@ -46,16 +46,16 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
     Spinner spinner1;
     EditText description;
     private DatePickerDialog.OnDateSetListener mDataSetListener;
-    private  DatePickerDialog.OnDateSetListener mDataSetListener1;
-    String tempfromdate, temptodate, temptype, tempdescription;
-    String ServerURL = "http://192.168.1.119:8080/EmpAdmin/leave.php";
+    private DatePickerDialog.OnDateSetListener mDataSetListener1;
+    String tempfromdate, temptodate, temptype, tempdescription, tempempid;
+    String ServerURL = "http://192.168.1.119:8080/final/final/admin/leave.php";
     Button btnapply;
+    int backButtonCount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave);
-
 
         description = findViewById(R.id.description);
 
@@ -174,19 +174,15 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
         });*/
 
 
-
-
-
         btnapply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
-
                 getdata();
-                InsertData(tempfromdate, temptodate, temptype, tempdescription);
+                InsertData(tempfromdate, temptodate, temptype, tempdescription, tempempid);
 
-            //createleave();
+                //createleave();
 
             }
 
@@ -207,12 +203,12 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
 
-       //temptype = parent.getItemAtPosition(i).toString();
-       // Toast.makeText(adapterView.getContext(),text, Toast.LENGTH_SHORT).show();
-       // btnapply.setTag(i+""); // Passing as string
-      //  parent.getItemAtPosition(i;
-      //  parent.setSelection(0);
-      //  parent.getSelectedItemPosition();
+        //temptype = parent.getItemAtPosition(i).toString();
+        // Toast.makeText(adapterView.getContext(),text, Toast.LENGTH_SHORT).show();
+        // btnapply.setTag(i+""); // Passing as string
+        //  parent.getItemAtPosition(i;
+        //  parent.setSelection(0);
+        //  parent.getSelectedItemPosition();
 
     }
 
@@ -221,17 +217,18 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
 
     }
 
-   public void getdata(){
-        tempfromdate=mDisplayDate.getText().toString();
-        temptodate=mDisplayDate2.getText().toString();
-        temptype=spinner1.getSelectedItem().toString();
-        temptype=String.valueOf(spinner1.getSelectedItem());
+    public void getdata() {
+        tempfromdate = mDisplayDate.getText().toString();
+        temptodate = mDisplayDate2.getText().toString();
+        temptype = spinner1.getSelectedItem().toString();
+        temptype = String.valueOf(spinner1.getSelectedItem());
+        tempdescription = description.getText().toString();
 
-       tempdescription=description.getText().toString();
 
 
     }
-    public void InsertData(final String fromdate, final String todate, final String leavetype, final String description) {
+
+    public void InsertData(final String fromdate, final String todate, final String leavetype, final String description, final String empid) {
 
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
             @Override
@@ -241,6 +238,7 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
                 String todateholder = todate;
                 String typeholder = leavetype;
                 String descriptionholder = description;
+                String empidholder = empid;
 
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -249,6 +247,7 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
                 nameValuePairs.add(new BasicNameValuePair("todate", todateholder));
                 nameValuePairs.add(new BasicNameValuePair("leavetype", typeholder));
                 nameValuePairs.add(new BasicNameValuePair("description", descriptionholder));
+                nameValuePairs.add(new BasicNameValuePair("empid", empidholder));
 
                 try {
                     HttpClient httpClient = new DefaultHttpClient();
@@ -282,10 +281,23 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
 
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
 
-        sendPostReqAsyncTask.execute(fromdate, todate,  description);
+        sendPostReqAsyncTask.execute(fromdate, todate, description, empid);
 
 
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if (backButtonCount >= 1) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
+            backButtonCount++;
+        }
+    }
 }
 
