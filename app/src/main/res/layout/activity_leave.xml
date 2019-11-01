@@ -164,14 +164,7 @@
         android:textAlignment="center"
         android:textSize="30sp" />
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/NavBot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        design:itemTextColor="@color/colorPrimaryDark"
-        design:menu="@menu/menu_nav"
-        android:background="#fff"/>
+
 
 
 </android.support.design.widget.CoordinatorLayout>

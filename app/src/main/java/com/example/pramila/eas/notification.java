@@ -16,7 +16,7 @@ public class notification extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
+       /* BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.NavBot);
@@ -44,19 +44,8 @@ public class notification extends AppCompatActivity {
                 }
                 return false;
             }
-        });
+        });*/
     }
 
-    @Override
-    public void onBackPressed() {
-        if (backButtonCount >= 1) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
-            backButtonCount++;
-        }
-    }
+
 }

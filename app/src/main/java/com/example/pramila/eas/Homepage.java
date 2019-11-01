@@ -1,100 +1,122 @@
 package com.example.pramila.eas;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
 public class Homepage extends AppCompatActivity {
-    int backButtonCount=0;
 
+        GridLayout mainGrid;
+        int backButtonCount=0;
 
-    //CalendarView compactCalendar;
-    //private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("MMMM - yyyy", Locale.getDefault());
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                setContentView(R.layout.activity_homepage);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_homepage);
+                mainGrid = (GridLayout) findViewById(R.id.mainGrid);
 
-        BottomNavigationView mButtonNavigationView;
-        BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
-        BottomNavigationView bottomNavigationView;
-        bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.NavBot);
-        bottomNavigationView.setSelectedItemId(R.id.home);
-        NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.Home:
-                        break;
-                    case R.id.Apply_Leave:
-                        Intent a = new Intent(Homepage.this, leave.class);
-                        startActivity(a);
-                        break;
-                    case R.id.Notification:
-                        Intent b = new Intent(Homepage.this, notification.class);
-                        startActivity(b);
-                        break;
-                    case R.id.Profile:
-                        Intent c = new Intent(Homepage.this, profile.class);
-                        startActivity(c);
-                        break;
-                }
-                return false;
-            }
-        });
-
-
-        //final ActionBar actionbar = getSupportActionBar();
-        //actionbar.setDisplayHomeAsUpEnabled(false);
-        //actionbar.setTitle(null);
-
-        //compactCalendar  = (CalendarView)findViewById(R.id.calendar);
-        //compactCalendar.setUseThreeLetterAbbreviation(true);
-
-
-        //UsageEvents.Event ev1 = new Event(Color.RED,1563214500000L,"Teachers' Day");
-        //compactCalendar.addEvent(ev1);
-
-        /*compactCalendar.setListener(new CalendarView.CalendarViewListener() {
-            @Override
-            public void onDayClick(Date dateClicked) {
-                Context context = getApplicationContext();
-
-                if(dateClicked.toString().compareTo("Tue July 16 00:00:00 AST 2019") == 0) {
-                    Toast.makeText(context, "Teachers' Day", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(context, "No Events planned for that day", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-                actionbar.setTitle(dateFormatMonth.format(firstDayOfNewMonth));
-
-            }
-        });
-    }*/
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (backButtonCount >= 1) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
-            backButtonCount++;
+                //Set Event
+                setSingleEvent(mainGrid);
+                //setToggleEvent(mainGrid);
         }
-    }
+
+        private void setToggleEvent(GridLayout mainGrid) {
+                //Loop all child item of Main Grid
+                for (int i = 0; i < mainGrid.getChildCount(); i++) {
+//You can see , all child item is CardView , so we just cast object to CardView
+                        final CardView cardView = (CardView) mainGrid.getChildAt(i);
+                        cardView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                        if (cardView.getCardBackgroundColor().getDefaultColor() == -1) {
+                                                //Change background color
+                                                cardView.setCardBackgroundColor(Color.parseColor("#FF6F00"));
+                                                Toast.makeText(Homepage.this, "State : True", Toast.LENGTH_SHORT).show();
+
+                                        } else {
+                                                //Change background color
+                                                cardView.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
+                                                Toast.makeText(Homepage.this, "State : False", Toast.LENGTH_SHORT).show();
+                                        }
+                                }
+                        });
+                }
+        }
+
+        private void setSingleEvent(GridLayout mainGrid) {
+                //Loop all child item of Main Grid
+                for (int i = 0; i < mainGrid.getChildCount(); i++) {
+                        //You can see , all child item is CardView , so we just cast object to CardView
+                        CardView cardView = (CardView) mainGrid.getChildAt(i);
+                        final int finalI = i;
+                        cardView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                        if (finalI == 0) {
+
+                                                Intent intent = new Intent(Homepage.this, EventActivity.class);
+                                                intent.putExtra("info", "This is activity from card item index  " + finalI);
+                                                startActivity(intent);
+
+                                        } else if (finalI == 1) {
+                                                Intent intent = new Intent(Homepage.this, Attendance.class);
+                                                startActivity(intent);
+                                        } else if (finalI == 2) {
+                                                Intent intent = new Intent(Homepage.this, profile.class);
+                                                startActivity(intent);
+                                        } else if (finalI == 3) {
+                                                Intent intent = new Intent(Homepage.this, leave.class);
+                                                startActivity(intent);
+                                        } else if (finalI == 4) {
+                                                Intent intent = new Intent(Homepage.this,notification.class);
+                                                startActivity(intent);
+                                        }
+                                }
+                        });
+                }
+        }
+        @Override
+        public void onBackPressed () {
+                if (backButtonCount >= 1) {
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_HOME);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                } else {
+                        Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
+                        backButtonCount++;
+                }
+        }
 }
+
+
+
 
 

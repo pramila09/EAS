@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -38,17 +44,26 @@ import java.net.URL;
 
 public class profile extends AppCompatActivity {
 
-    public static final int CONNECTION_TIMEOUT = 10000;
-    public static final int READ_TIMEOUT = 15000;
+   // public static final int CONNECTION_TIMEOUT = 10000;
+   // public static final int READ_TIMEOUT = 15000;
 
-    private TextView tvemail, tvdept, tvaddress, tvreg, tvname;
+   // private TextView tvemail, tvdept, tvaddress, tvreg, tvname;
 
-    private static final String TAG = "profile";
-    SharedPreferences sharedpreferences;
-    public static final String MyPREFERENCES = "MyPrefs";
-    int backButtonCount=0;
+    //private static final String TAG = "profile";
+   SharedPreferences sharedpreferences;
+   public static final String MyPREFERENCES = "MyPrefs";
+   int backButtonCount=0;
 
-    private static final String url = "http://192.168.1.119:8080/EmpAdmin.profile.php";
+   // private static final String url = "http://192.168.1.119:8080/final/final/admin/profile2.php";
+    String urladdress="http://192.168.1.119:8080/final/final/admin/profile2.php";
+    String[] tvname;
+    String[] tvemail;
+    String[] tvdept;
+    String[] tvaddress;
+    String[] tvreg;
+    BufferedInputStream is;
+    String line=null;
+    String result=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,20 +71,20 @@ public class profile extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
 
-        tvemail = findViewById(R.id.tvemail);
+       /* tvemail = findViewById(R.id.tvemail);
         tvname = findViewById(R.id.tvname);
         tvdept = findViewById(R.id.tvdept);
         tvreg = findViewById(R.id.tvreg);
-        tvaddress = findViewById(R.id.tvaddress);
+        tvaddress = findViewById(R.id.tvaddress);*/
 
 
-        tvemail.setText(SharedPrefManager.getInstance(this).getUserEmail());
+        /*tvemail.setText(SharedPrefManager.getInstance(this).getUserEmail());
         tvname.setText(SharedPrefManager.getInstance(this).getKeyUsername());
         tvdept.setText(SharedPrefManager.getInstance(this).getKeyDepartment());
         tvaddress.setText(SharedPrefManager.getInstance(this).getKeyAddress());
-        tvreg.setText(SharedPrefManager.getInstance(this).getKeyRegisteredDate());
+        tvreg.setText(SharedPrefManager.getInstance(this).getKeyRegisteredDate());*/
 
-        BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
+        /*BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
         BottomNavigationView bottomNavigationView;
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.NavBot);
         bottomNavigationView.setSelectedItemId(R.id.Profile);
@@ -95,13 +110,18 @@ public class profile extends AppCompatActivity {
                 }
                 return false;
             }
-        });
+        });*/
 
 
         Button logout = (Button) findViewById(R.id.logout);
         sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         //loadProfile();
+
+        StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+        collectData();
+        //Custom customListView=new Custom(this,tvname,tvemail,tvaddress, tvreg, tvdept);
+       // TextView.setAdapter(customListView);
     }
 
     public void logout(View v) {
@@ -112,23 +132,8 @@ public class profile extends AppCompatActivity {
         Intent i = new Intent(profile.this, MainActivity.class);
         startActivity(i);
     }
-    @Override
-    public void onBackPressed()
-    {
-        if(backButtonCount >= 1)
-        {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-        else
-        {
-            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
-            backButtonCount++;
-        }
-    }
-}
+
+
 
 
 
@@ -148,9 +153,9 @@ public class profile extends AppCompatActivity {
 
 
 
-    /*public void getusername(){
-        final String name = tvname.getText().toString();
-        new Asyncprofile().execute(name);
+    //public void getusername(){
+       // final String name = tvname.getText().toString();
+       // new Asyncprofile().execute(name);
 
     }
     public void getemail(){
@@ -293,6 +298,67 @@ public class profile extends AppCompatActivity {
 
     }
 }*/
+    private void collectData()
+    {
+//Connection
+        try{
+
+            URL url=new URL(urladdress);
+            HttpURLConnection con=(HttpURLConnection)url.openConnection();
+            con.setRequestMethod("GET");
+            is=new BufferedInputStream(con.getInputStream());
+
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        //content
+        try{
+            BufferedReader br=new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb=new StringBuilder();
+            while ((line=br.readLine())!=null){
+                sb.append(line+"\n");
+            }
+            is.close();
+            result=sb.toString();
+
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+
+        }
+
+//JSON
+        try{
+            JSONArray ja=new JSONArray(result);
+            JSONObject jo=null;
+            tvname=new String[ja.length()];
+            tvemail=new String[ja.length()];
+            tvdept=new String[ja.length()];
+            tvaddress=new String[ja.length()];
+            tvreg=new String[ja.length()];
+
+            for(int i=0;i<=ja.length();i++){
+                jo=ja.getJSONObject(i);
+                tvname[i]=jo.getString("Fname");
+                tvemail[i]=jo.getString("emailid");
+                tvdept[i]=jo.getString("department");
+                tvaddress[i]=jo.getString("District");
+                tvreg[i]=jo.getString("regdate");
+            }
+        }
+        catch (Exception ex)
+        {
+
+            ex.printStackTrace();
+        }
+
+
+    }
+}
+
 
 
 
