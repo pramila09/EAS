@@ -32,8 +32,15 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -50,7 +57,11 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
     String tempfromdate, temptodate, temptype, tempdescription, tempempid;
     String ServerURL = "http://192.168.1.119:8080/final/final/admin/leave.php";
     Button btnapply;
-    int backButtonCount=0;
+    InputStream is = null;
+    String result=null;
+    String line=null;
+    String[] leavetype;
+    HttpURLConnection urlConnection=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,18 +171,65 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(adapter);
         spinner1.setOnItemSelectedListener(this);
-        /*spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Object   = adapterView.getItemIdAtPosition(i);
+        final List<String> list1 = new ArrayList<String>();
+        try {
+           /* HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://192.168.1.119:8080/final/final/admin/spinner.php");
+            HttpResponse response = httpclient.execute(httppost);
+            HttpEntity entity = response.getEntity();
+            is = entity.getContent();*/
+            URL url = new URL("http://192.168.1.119:8080/final/final/admin/spinner.php");
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.connect();
+            is=urlConnection.getInputStream();
+
+        }
+        catch (Exception e)
+        {
+            Log.e("Fail 3",e.toString());
+            Toast.makeText(getApplicationContext(),"Invalid IP Address", Toast.LENGTH_LONG).show();
+            finish();
+        } try{
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"utf-8"),8);
+            StringBuilder sb = new StringBuilder();
+            while((line = reader.readLine())!= null)
+            {
+                sb.append(line + "\n");
+            }
+            is.close();
+            result=sb.toString();
+        }
+        catch (Exception e)
+        {
+            Log.e("Fail 2",e.toString());
+        }
+        try
+        {
+            JSONArray JA=new JSONArray(result);
+            JSONObject json=null;
+            leavetype = new String[JA.length()];
+            for(int i=0;i<JA.length();i++)
+            {
+                json=JA.getJSONObject(i);
+                leavetype[i] = json.getString("leavetype");
+
+            }
+            Toast.makeText(getApplicationContext(), "Data Loaded", Toast.LENGTH_LONG).show();
+
+            for(int i=0;i<leavetype.length;i++)
+            {
+                list1.add(leavetype[i]);
+
             }
 
+            spinner_fn();
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+        }
+        catch(Exception e) {
 
-            }
-        });*/
+            Log.e("Fail 3", e.toString());
+
+        }
 
 
         btnapply.setOnClickListener(new View.OnClickListener() {
@@ -189,7 +247,6 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
 
         });
 
-
     }
    /* private final void createleave(){
         String temptype=spinner1.getSelectedItem().toString();
@@ -198,6 +255,8 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
 
 
     }*/
+
+
 
 
     @Override
@@ -285,7 +344,15 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
 
 
     }
+    private void spinner_fn() {
+// TODO Auto-generated method stub
 
+        ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_spinner_item, leavetype);
+        dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner1.setAdapter(dataAdapter1);
+
+    }
 
 
 }
