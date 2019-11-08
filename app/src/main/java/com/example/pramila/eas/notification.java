@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class notification extends AppCompatActivity {
-    int backButtonCount=0;
+    int backButtonCount = 0;
     private Button register;
     private EditText editTextEmail;
     private ProgressDialog progressDialog;
@@ -37,80 +37,56 @@ public class notification extends AppCompatActivity {
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         register = (Button) findViewById(R.id.register);
 
-       /* BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
-        BottomNavigationView bottomNavigationView;
-        bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.NavBot);
-        bottomNavigationView.setSelectedItemId(R.id.Notification);
-        NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch(menuItem.getItemId()){
-                    case R.id.Home:
-                        Intent d = new Intent(notification.this, Homepage.class);
-                        startActivity(d);
-                        break;
-
-                    case R.id.Apply_Leave:
-                        Intent a = new Intent(notification.this, leave.class);
-                        startActivity(a);
-                        break;
-                    case R.id.Notification:
-
-                        break;
-                    case R.id.Profile:
-                        Intent c = new Intent(notification.this, Homepage.class);
-                        startActivity(c);
-                        break;
-                }
-                return false;
-            }
-        });*/
+        Intent intent = new Intent(this, RegistrationIntentService.class);
+        startService(intent);
     }
-    public void sendToken(View view) {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Registering Device...");
-        progressDialog.show();
 
-        final String token = SharedPreference.getInstance(this).getDeviceToken();
-        final String email = editTextEmail.getText().toString();
+    /* public void sendToken(View view) {
+         progressDialog = new ProgressDialog(this);
+         progressDialog.setMessage("Registering Device...");
+         progressDialog.show();
 
-        if (token == null) {
-            progressDialog.dismiss();
-            Toast.makeText(this, "Token not generated", Toast.LENGTH_LONG).show();
-            return;
-        }
+         final String token = SharedPreference.getInstance(this).getDeviceToken();
+         final String email = editTextEmail.getText().toString();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.URL_REGISTER_DEVICE,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        progressDialog.dismiss();
-                        try {
-                            JSONObject obj = new JSONObject(response);
-                            Toast.makeText(notification.this, obj.getString("message"), Toast.LENGTH_LONG).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        progressDialog.dismiss();
-                        Toast.makeText(notification.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
+         if (token == null) {
+             progressDialog.dismiss();
+             Toast.makeText(this, "Token not generated", Toast.LENGTH_LONG).show();
+             return;
+         }
 
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("email", email);
-                params.put("token", token);
-                return params;
-            }
-        };
-        FcmVolley.getInstance(this).addToRequestQueue(stringRequest);
-    }
+         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.URL_REGISTER_DEVICE,
+                 new Response.Listener<String>() {
+                     @Override
+                     public void onResponse(String response) {
+                         progressDialog.dismiss();
+                         try {
+                             JSONObject obj = new JSONObject(response);
+                             Toast.makeText(notification.this, obj.getString("message"), Toast.LENGTH_LONG).show();
+                         } catch (JSONException e) {
+                             e.printStackTrace();
+                         }
+                     }
+                 },
+                 new Response.ErrorListener() {
+                     @Override
+                     public void onErrorResponse(VolleyError error) {
+                         progressDialog.dismiss();
+                         Toast.makeText(notification.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                     }
+                 }) {
+
+             @Override
+             protected Map<String, String> getParams() throws AuthFailureError {
+                 Map<String, String> params = new HashMap<>();
+                 params.put("email", email);
+                 params.put("token", token);
+                 return params;
+             }
+         };
+         FcmVolley.getInstance(this).addToRequestQueue(stringRequest);
+     }*/
+
+
 
 }

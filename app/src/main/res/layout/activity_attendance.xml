@@ -6,4 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".Attendance">
 
+    <com.skyhope.eventcalenderlibrary.CalenderEvent
+        android:id="@+id/calender_event"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>

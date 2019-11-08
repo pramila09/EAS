@@ -7,18 +7,18 @@ public class SharedPreference {
     private static final String SHARED_PREF_NAME = "FCMSharedPref";
     private static final String TAG_TOKEN = "tagtoken";
 
-    private static SharedPreference mInstance;
+    private static SharedPreference pref;
     private static Context mCtx;
 
     private SharedPreference(Context context) {
         mCtx = context;
     }
 
-    public static synchronized SharedPreference getInstance(Context context) {
-        if (mInstance == null) {
-            mInstance = new SharedPreference(context);
+   public static synchronized SharedPreference getInstance(Context context) {
+        if ( pref== null) {
+            pref = new SharedPreference(context);
         }
-        return mInstance;
+        return pref;
     }
 
     //this method will save the device token to shared preferences
@@ -35,5 +35,12 @@ public class SharedPreference {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return  sharedPreferences.getString(TAG_TOKEN, null);
     }
+
+
+   // SharedPreferences pref = mCtx.getSharedPreferences("sessionid",Context.MODE_PRIVATE);
+   // SharedPreferences.Editor edit = pref.edit();
+                //edit.putIn("sessionid",sessionid);
+              //  edit.commit();
+
 
 }

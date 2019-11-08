@@ -1,8 +1,10 @@
 package com.example.pramila.eas;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -28,22 +30,61 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.util.HashMap;
 
 public class Homepage extends AppCompatActivity {
 
+        private static final int CONNECTION_TIMEOUT = 10000;
+        private static final int READ_TIMEOUT = 15000;
+
         GridLayout mainGrid;
-        int backButtonCount=0;
+        int backButtonCount = 0;
+        String sessionid;
+        Button logout;
+        //UserSessionManager session;
+
+        private SharedPreferences preferences;
+        private SharedPreferences.Editor editor;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
                 setContentView(R.layout.activity_homepage);
 
+          //  session = new UserSessionManager(getApplicationContext());
+
                 mainGrid = (GridLayout) findViewById(R.id.mainGrid);
+
+                Intent i = getIntent();
+                sessionid = i.getStringExtra("sessionid");
+
+                /*String cookies = preferences.getString("cookies",null);
+                if(cookies!=null){
+                       Intent intent = new Intent(Homepage.this,MainActivity.class);
+                       startActivity(intent);
+                }*/
 
                 //Set Event
                 setSingleEvent(mainGrid);
                 //setToggleEvent(mainGrid);
+
+               // if(session.checkLogin())
+                      //  finish();
+                /*Toast.makeText(getApplicationContext(),
+                       "User Login Status: " + session.isUserLoggedIn(),
+                        Toast.LENGTH_LONG).show();
+                if(session.checkLogin())
+                       finish();
+
+                HashMap<String, String> user = session.getUserDetails();
+
+                // get name
+                String sessionid = user.get(UserSessionManager.KEY_NAME);*/
+
         }
 
         private void setToggleEvent(GridLayout mainGrid) {
@@ -90,20 +131,24 @@ public class Homepage extends AppCompatActivity {
                                                 startActivity(intent);
                                         } else if (finalI == 2) {
                                                 Intent intent = new Intent(Homepage.this, profile.class);
+                                            intent.putExtra("sessionid", sessionid);
                                                 startActivity(intent);
                                         } else if (finalI == 3) {
                                                 Intent intent = new Intent(Homepage.this, leave.class);
+                                                intent.putExtra("sessionid", sessionid);
                                                 startActivity(intent);
                                         } else if (finalI == 4) {
-                                                Intent intent = new Intent(Homepage.this,notification.class);
+                                                Intent intent = new Intent(Homepage.this, notification.class);
                                                 startActivity(intent);
+
                                         }
                                 }
                         });
                 }
         }
+
         @Override
-        public void onBackPressed () {
+        public void onBackPressed() {
                 if (backButtonCount >= 1) {
                         Intent intent = new Intent(Intent.ACTION_MAIN);
                         intent.addCategory(Intent.CATEGORY_HOME);
@@ -115,8 +160,6 @@ public class Homepage extends AppCompatActivity {
                 }
         }
 }
-
-
 
 
 

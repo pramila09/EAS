@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +18,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -23,18 +27,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
+    String sessionid;
 
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String Email = "emailKey";
     public static final String Password = "passwordKey";
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String SESSIONID = "sessionid";
+
 
     private EditText etemail, etpassword;
     private String username, pass;
@@ -43,16 +55,51 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox saveLoginCheckBox;
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
     private Boolean saveLogin;
+    ////private SharedPrefManager prefManager;
     int backButtonCount=0;
+    //UserSessionManager session;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        String id = settings.getString("sessionid", "-1");
+        if(id.equals("-1") ){
+            Toast.makeText(this, "sessionid"+sessionid, Toast.LENGTH_LONG).show();
+            Log.e("eas","sessionid"+sessionid);
+        }else{
+            sessionid=id;
+            Toast.makeText(this, "sessionid"+sessionid, Toast.LENGTH_LONG).show();
+            Log.e("eas","sessionid"+sessionid);
+            Intent intent = new Intent(MainActivity.this, Homepage.class);
+            intent.putExtra("sessionid",sessionid);
+            startActivity(intent);
+            MainActivity.this.finish();
+        }
+
+        //session = new UserSessionManager(getApplicationContext());
+
+        //prefManager=new SharedPrefManager(getApplicationContext());
         etemail = (EditText) findViewById(R.id.email);
         etpassword = (EditText) findViewById(R.id.password);
+
+        /*Toast.makeText(getApplicationContext(),
+                "User Login Status: " + session.isUserLoggedIn(),
+                Toast.LENGTH_LONG).show();
+        if(session.checkLogin())
+            finish();
+
+        HashMap<String, String> user = session.getUserDetails();
+        String sessionid = user.get(UserSessionManager.KEY_NAME);*/
+/*
         saveLoginCheckBox = (CheckBox) findViewById(R.id.saveLoginCheckBox);
         loginPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         if(loginPreferences.getBoolean("logged",false)){
@@ -69,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             etpassword.setText(loginPreferences.getString("password", ""));
             saveLoginCheckBox.setChecked(true);
         }
+        */
 
 
         btn = (Button) findViewById(R.id.btn);
@@ -87,53 +135,26 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     checkLogin(view);
                 }
-               /* String e= etemail.getText().toString();
 
-                SharedPreferences.Editor editor = loginPreferences.edit();
-                editor.putString(Email, e);
-
-                if((!etemail.getText().toString().equals(""))&&
-                        (!etpassword.getText().toString().equals(""))){
-
-                    if(saveLoginCheckBox.isChecked()){
-                        Boolean booleanChecked = saveLoginCheckBox.isChecked();
-                        SharedPreferences.Editor editor1  = loginPreferences.edit();
-                        editor1.putString("pref_name", etemail.getText().toString());
-                        editor1.putString("pref_pass",etpassword.getText().toString());
-                        editor1.putBoolean("pref_check", booleanChecked);
-                        editor1.apply();
-
-
-                    }else{
-                        loginPreferences.edit().clear().apply();
-                    }
-                    Log.i("username", etemail.getText().toString());
-                    Log.i("password", etpassword.getText().toString());
-                    Context context = getApplicationContext();
-
-                    String string="Username:" + etemail.getText().toString()
-                            + "\nPassword: "+ etpassword.getText().toString();
-                      Intent intent=new Intent(getBaseContext(),Homepage.class);
-                      intent.putExtra("ux",etemail.getText().toString());
-
-                      startActivity(intent);
-
-
-
-
-                }*/
             }
 
 
         });
         Button btnlearn = (Button) findViewById(R.id.btnlearn);
-        btnlearn.setOnClickListener(new View.OnClickListener() {
+        /*btnlearn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), learn.class);
                 view.getContext().startActivity(intent);
             }
-        });
+        });*/
+        /*
+
+        if(prefManager.readLoginStatus())
+        {
+            startActivity(new Intent(this,Homepage.class));
+        }
+        */
 
     }
 
@@ -149,16 +170,27 @@ public class MainActivity extends AppCompatActivity {
    public void checkLogin(View arg0) {
         final String email = etemail.getText().toString();
         final String password = etpassword.getText().toString();
-       Toast.makeText(getApplicationContext(),"result: connecting",Toast.LENGTH_LONG).show();
+        if(email.equals("") && password.equals("")) {
+            //session.createUserLoginSession("sessionid");
+            startActivity(new Intent(this, Homepage.class));
+            //prefManager.writeLoginStatus(true);
+
+        }
+        else
+        {
+            Toast.makeText(this,"Login failed",Toast.LENGTH_LONG).show();
+        }
+
+        Toast.makeText(getApplicationContext(),"result: connecting",Toast.LENGTH_LONG).show();
        if (arg0 == btn) {
-               InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-               imm.hideSoftInputFromWindow(etemail.getWindowToken(), 0);
+           InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+           imm.hideSoftInputFromWindow(etemail.getWindowToken(), 0);
 
-               username = etemail.getText().toString();
-               pass= etpassword.getText().toString();
+           username = etemail.getText().toString();
+           pass = etpassword.getText().toString();
 
 
-               if (saveLoginCheckBox.isChecked()) {
+              /* if (saveLoginCheckBox.isChecked()) {
                    loginPrefsEditor.putBoolean("saveLogin", true);
                    loginPrefsEditor.putString("username", username);
                    loginPrefsEditor.putString("password", pass);
@@ -168,12 +200,12 @@ public class MainActivity extends AppCompatActivity {
                    loginPrefsEditor.commit();
                }
            }
-       loginPreferences.edit().putBoolean("logged",true).apply();
-
-
+       loginPreferences.edit().putBoolean("logged",true).apply();*/
+       }
 
         new AsyncLogin().execute(email, password);
     }
+
 
     private class AsyncLogin extends AsyncTask<String, String, String> {
         ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
@@ -182,10 +214,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
+
+
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://192.168.1.119:8080/final/final/admin/login.php");
+                url = new URL("http://"+Server.address+"/final/final/admin/login.php");
+
+
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -218,6 +254,19 @@ public class MainActivity extends AppCompatActivity {
                 writer.close();
                 os.close();
                 conn.connect();
+
+                Map<String , List<String> >headFields = conn.getHeaderFields();
+                List<String> cookieHeader = headFields.get("Set-Cookie");
+
+                if(cookieHeader!=null){
+                    for(String cookie : cookieHeader){
+                        sessionid = HttpCookie.parse(cookie).get(0).toString();
+                    }
+                   // session.createUserLoginSession("sessionid");
+                }
+                //session.createUserLoginSession("sessionid");
+
+
 
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
@@ -263,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             pdLoading.dismiss();
-            Toast.makeText(getApplicationContext(),"result:"+result,Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"result:"+result+" sessionid:"+sessionid,Toast.LENGTH_LONG).show();
             Log.e("eas","Result: "+result);
             Log.e("eas","true found"+result);
 
@@ -273,11 +322,22 @@ public class MainActivity extends AppCompatActivity {
                 use sharedPreferences of Android. and logout button to clear sharedPreferences.
                  */
 
-
+                Log.e("eas","Mainactivity sessionid:"+sessionid);
+                Log.e("eas",""+result);
+                //String cookies="sessionid";
+                //editor = preferences.edit();
+                //editor.putString("cookies",cookies);
+                //editor.apply();
                Intent intent = new Intent(MainActivity.this, Homepage.class);
+               intent.putExtra("sessionid",sessionid);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("sessionid",sessionid);
+                editor.commit();
                 startActivity(intent);
                 MainActivity.this.finish();
-                Log.e("eas","true found"+result);
+
+                //getUser();
                 Toast.makeText(MainActivity.this, "Successful login", Toast.LENGTH_LONG).show();
 
 
@@ -323,17 +383,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-   /* public void getUser() {
-
-        SharedPreferences loginPreferences = getSharedPreferences(MyPREFERENCES,MODE_PRIVATE);
-        String username = loginPreferences.getString(Email,null);
-        String password = loginPreferences.getString(Password,null);
-        }
-
-
     public void rememberMe(String email, String password) {
         getSharedPreferences(MyPREFERENCES, MODE_PRIVATE).edit().putString(Email, email).putString(Password, password).commit();
-    }*/
+    }
+
+    public void savedata(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(sessionid,"sessionid");
+    }
 }
 
 

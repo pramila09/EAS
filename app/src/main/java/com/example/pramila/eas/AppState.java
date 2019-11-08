@@ -1,7 +1,6 @@
 package com.example.pramila.eas;
 
 public class AppState {
-
     private static AppState singleInstance;
 
     private boolean isLoggingOut;
@@ -23,5 +22,7 @@ public class AppState {
     public void setLoggingOut(boolean isLoggingOut) {
         this.isLoggingOut = isLoggingOut;
     }
+
+
 
 }

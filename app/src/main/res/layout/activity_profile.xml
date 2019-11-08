@@ -36,7 +36,9 @@
             android:textSize="20sp" />
 
 
+
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_marginLeft="30dp"
@@ -46,6 +48,39 @@
         android:layout_marginTop="200dp"
         android:orientation="vertical"
         >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Employee ID "
+            android:paddingTop="15dp"
+            android:textSize="13sp"
+            android:drawableLeft="@drawable/ic_email_black_24dp"
+            />
+
+        <TextView
+            android:id="@+id/tvempid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#2E2C2C"
+            android:textSize="18sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="#E6E3E3"/>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="280dp"
+        android:layout_marginRight="30dp"
+        android:orientation="vertical">
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -56,7 +91,7 @@
           />
         <TextView
             android:id="@+id/tvemail"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             android:textSize="18sp"
@@ -67,13 +102,15 @@
             android:layout_marginTop="15dp"
             android:background="#E6E3E3"/>
 
+
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="94dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="280dp"
+        android:layout_marginTop="360dp"
         android:layout_marginRight="30dp"
         android:orientation="vertical">
 
@@ -87,7 +124,38 @@
 
         <TextView
             android:id="@+id/tvdept"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="#2E2C2C"
+            android:textSize="18sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="15dp"
+            android:background="#E6E3E3"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="450dp"
+        android:layout_marginRight="30dp"
+        android:orientation="vertical">
+
+        <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_place_black_24dp"
+            android:text="Address"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvaddress"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             android:textColor="#2E2C2C"
@@ -97,41 +165,12 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="15dp"
-            android:background="#E6E3E3" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="370dp"
-        android:orientation="vertical"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Address"
-            android:textSize="13sp"
-            android:drawableLeft="@drawable/ic_place_black_24dp"/>
-        <TextView
-            android:id="@+id/tvaddress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:textSize="18sp"
-            android:textColor="#2E2C2C"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="15dp"
             android:background="#E6E3E3"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="530dp"
         android:orientation="vertical"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp">
@@ -143,7 +182,7 @@
             android:drawableLeft="@drawable/ic_date_range_black_24dp"/>
         <TextView
             android:id="@+id/tvreg"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             android:textSize="18sp"
@@ -154,24 +193,26 @@
             android:layout_marginTop="15dp"
             android:background="#E6E3E3"/>
 
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
-        android:layout_gravity="center">
+        android:layout_marginTop="600dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/logout"
-            android:layout_width="123dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/buttonstylepink"
             android:drawableRight="@drawable/ic_lock_outline_black_24dp"
             android:gravity="center"
-            android:text="Log out"
+            android:text="Log Out"
             android:textColor="#ffff"
-            android:onClick="logout"/>
+            android:layout_marginLeft="20dp"/>
     </LinearLayout>
 
 

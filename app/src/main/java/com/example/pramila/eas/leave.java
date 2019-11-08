@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -36,10 +37,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,6 +53,8 @@ import java.util.List;
 
 public class leave extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "leave";
+    public static final int CONNECTION_TIMEOUT = 10000;
+    public static final int READ_TIMEOUT = 15000;
 
     private TextView mDisplayDate, mDisplayDate2;
     Spinner spinner1;
@@ -55,50 +62,26 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
     private DatePickerDialog.OnDateSetListener mDataSetListener;
     private DatePickerDialog.OnDateSetListener mDataSetListener1;
     String tempfromdate, temptodate, temptype, tempdescription, tempempid;
-    String ServerURL = "http://192.168.1.119:8080/final/final/admin/leave.php";
     Button btnapply;
     InputStream is = null;
-    String result=null;
-    String line=null;
+    String result = null;
+    String line = null;
     String[] leavetype;
-    HttpURLConnection urlConnection=null;
+    HttpURLConnection urlConnection = null;
+    String sessionid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leave);
 
+        Intent intent = getIntent();
+        sessionid = intent.getStringExtra("sessionid");
+        Log.e("eas", "sessionid:" + sessionid);
+
         description = findViewById(R.id.description);
 
         btnapply = findViewById(R.id.btnapply);
-
-        /*BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
-        BottomNavigationView bottomNavigationView;
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.NavBot);
-        bottomNavigationView.setSelectedItemId(R.id.Apply_Leave);
-        NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.Home:
-                        Intent d = new Intent(leave.this, Homepage.class);
-                        startActivity(d);
-                        break;
-                    case R.id.Apply_Leave:
-
-                        break;
-                    case R.id.Notification:
-                        Intent b = new Intent(leave.this, notification.class);
-                        startActivity(b);
-                        break;
-                    case R.id.Profile:
-                        Intent c = new Intent(leave.this, Homepage.class);
-                        startActivity(c);
-                        break;
-                }
-                return false;
-            }
-        });*/
 
         mDisplayDate = (TextView) findViewById(R.id.tvDate);
         mDisplayDate.setOnClickListener(new View.OnClickListener() {
@@ -165,71 +148,9 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
 
 
         spinner1 = findViewById(R.id.spinner1);
-        //String name = spinner.getSelectedItem().toString();
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.leave, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner1.setAdapter(adapter);
         spinner1.setOnItemSelectedListener(this);
-        final List<String> list1 = new ArrayList<String>();
-        try {
-           /* HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://192.168.1.119:8080/final/final/admin/spinner.php");
-            HttpResponse response = httpclient.execute(httppost);
-            HttpEntity entity = response.getEntity();
-            is = entity.getContent();*/
-            URL url = new URL("http://192.168.1.119:8080/final/final/admin/spinner.php");
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.connect();
-            is=urlConnection.getInputStream();
 
-        }
-        catch (Exception e)
-        {
-            Log.e("Fail 3",e.toString());
-            Toast.makeText(getApplicationContext(),"Invalid IP Address", Toast.LENGTH_LONG).show();
-            finish();
-        } try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"utf-8"),8);
-            StringBuilder sb = new StringBuilder();
-            while((line = reader.readLine())!= null)
-            {
-                sb.append(line + "\n");
-            }
-            is.close();
-            result=sb.toString();
-        }
-        catch (Exception e)
-        {
-            Log.e("Fail 2",e.toString());
-        }
-        try
-        {
-            JSONArray JA=new JSONArray(result);
-            JSONObject json=null;
-            leavetype = new String[JA.length()];
-            for(int i=0;i<JA.length();i++)
-            {
-                json=JA.getJSONObject(i);
-                leavetype[i] = json.getString("leavetype");
-
-            }
-            Toast.makeText(getApplicationContext(), "Data Loaded", Toast.LENGTH_LONG).show();
-
-            for(int i=0;i<leavetype.length;i++)
-            {
-                list1.add(leavetype[i]);
-
-            }
-
-            spinner_fn();
-
-        }
-        catch(Exception e) {
-
-            Log.e("Fail 3", e.toString());
-
-        }
+        new spinnertask().execute();
 
 
         btnapply.setOnClickListener(new View.OnClickListener() {
@@ -238,36 +159,18 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
 
 
                 getdata();
-                InsertData(tempfromdate, temptodate, temptype, tempdescription, tempempid);
+                InsertData(tempfromdate, temptodate, temptype, tempdescription);
 
                 //createleave();
 
             }
 
-
         });
 
     }
-   /* private final void createleave(){
-        String temptype=spinner1.getSelectedItem().toString();
-        HashMap<String, String> params = new HashMap<>();
-        params.put("type",temptype);
-
-
-    }*/
-
-
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int i, long l) {
-
-        //temptype = parent.getItemAtPosition(i).toString();
-        // Toast.makeText(adapterView.getContext(),text, Toast.LENGTH_SHORT).show();
-        // btnapply.setTag(i+""); // Passing as string
-        //  parent.getItemAtPosition(i;
-        //  parent.setSelection(0);
-        //  parent.getSelectedItemPosition();
 
     }
 
@@ -282,14 +185,14 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
         temptype = spinner1.getSelectedItem().toString();
         temptype = String.valueOf(spinner1.getSelectedItem());
         tempdescription = description.getText().toString();
-
-
-
     }
 
-    public void InsertData(final String fromdate, final String todate, final String leavetype, final String description, final String empid) {
+    public void InsertData(final String fromdate, final String todate, final String leavetype, final String description) {
 
         class SendPostReqAsyncTask extends AsyncTask<String, Void, String> {
+            HttpURLConnection conn;
+            URL url = null;
+
             @Override
             protected String doInBackground(String... params) {
 
@@ -297,41 +200,93 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
                 String todateholder = todate;
                 String typeholder = leavetype;
                 String descriptionholder = description;
-                String empidholder = empid;
 
+                try {
+                    url = new URL("http://"+Server.address+"/final/final/admin/leave.php");
+                } catch (MalformedURLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    Log.e("eas",e.getMessage());
 
+                    return "exception";
+                }
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 
                 nameValuePairs.add(new BasicNameValuePair("fromdate", fromdateholder));
                 nameValuePairs.add(new BasicNameValuePair("todate", todateholder));
                 nameValuePairs.add(new BasicNameValuePair("leavetype", typeholder));
                 nameValuePairs.add(new BasicNameValuePair("description", descriptionholder));
-                nameValuePairs.add(new BasicNameValuePair("empid", empidholder));
-
                 try {
-                    HttpClient httpClient = new DefaultHttpClient();
+                    // Setup HttpURLConnection class to send and receive data from php and mysql
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setReadTimeout(READ_TIMEOUT);
+                    conn.setConnectTimeout(CONNECTION_TIMEOUT);
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Cookie", sessionid);
+                    conn.setDoInput(true);
+                    conn.setDoOutput(true);
+                    Uri.Builder builder = new Uri.Builder()
+                            .appendQueryParameter("fromdate", fromdateholder)
+                            .appendQueryParameter("todate", todateholder)
+                            .appendQueryParameter("leavetype", typeholder)
+                            .appendQueryParameter("description", descriptionholder);
+                    String query = builder.build().getEncodedQuery();
+                    OutputStream os = conn.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(
+                            new OutputStreamWriter(os, "UTF-8"));
 
-                    HttpPost httpPost = new HttpPost(ServerURL);
-
-                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                    HttpResponse httpResponse = httpClient.execute(httpPost);
-
-                    HttpEntity httpEntity = httpResponse.getEntity();
-
+                    writer.write(query);
+                    writer.flush();
+                    writer.close();
+                    os.close();
+                    conn.connect();
 
                 } catch (ClientProtocolException e) {
 
                 } catch (IOException e) {
 
                 }
-                return "Data Inserted Successfully";
+                try {
+
+                    int response_code = conn.getResponseCode();
+
+                    // Check if successful connection made
+                    if (response_code == HttpURLConnection.HTTP_OK) {
+
+                        // Read data sent from server
+                        InputStream input = conn.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                        StringBuilder result = new StringBuilder();
+                        String line;
+
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);
+                        }
+
+                        // Pass data to onPostExecute method
+                        return (sessionid + result.toString());
+
+                    } else {
+
+                        return ("unsuccessful");
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.e("eas",e.getMessage());
+                    return "exception";
+                } finally {
+                    conn.disconnect();
+                }
+
             }
 
             @Override
             protected void onPostExecute(String result) {
 
                 super.onPostExecute(result);
+
+                Log.e("eas", result);
 
                 Toast.makeText(leave.this, "Data Submit Successfully", Toast.LENGTH_LONG).show();
 
@@ -340,9 +295,74 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
 
         SendPostReqAsyncTask sendPostReqAsyncTask = new SendPostReqAsyncTask();
 
-        sendPostReqAsyncTask.execute(fromdate, todate, description, empid);
+        sendPostReqAsyncTask.execute(fromdate, todate, description);
 
 
+    }
+
+    public class spinnertask extends AsyncTask<Void, Void, Void> {
+        final List<String> list1 = new ArrayList<String>();
+        HttpURLConnection httpURLConnection;
+        URL url = null;
+
+
+
+
+        @Override
+        protected Void doInBackground(Void...arg0 ) {
+
+            try {
+                URL url = new URL("http://"+Server.address+"/final/final/admin/spinner.php");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.connect();
+                is = urlConnection.getInputStream();
+
+            } catch (Exception e) {
+                Log.e("Fail 1", e.toString());
+               // Toast.makeText(getApplicationContext(), "Invalid IP address", Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"), 8);
+                StringBuilder sb = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+                is.close();
+                result = sb.toString();
+            } catch (Exception e) {
+                Log.e("Fail 2", e.toString());
+            }
+            try {
+                JSONArray JA = new JSONArray(result);
+                JSONObject json = null;
+                leavetype = new String[JA.length()];
+                for (int i = 0; i < JA.length(); i++) {
+                    json = JA.getJSONObject(i);
+                    leavetype[i] = json.getString("leavetype");
+
+                }
+
+                Toast.makeText(getApplicationContext(), "Data Loaded", Toast.LENGTH_LONG).show();
+
+
+
+            } catch (Exception e) {
+
+                Log.e("Fail 3", e.toString());
+
+            }
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result){
+            super.onPostExecute(result);
+
+            spinner_fn();
+        }
     }
     private void spinner_fn() {
 // TODO Auto-generated method stub
@@ -353,7 +373,6 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
         spinner1.setAdapter(dataAdapter1);
 
     }
-
 
 }
 

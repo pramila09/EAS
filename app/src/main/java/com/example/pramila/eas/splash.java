@@ -14,6 +14,7 @@ public class splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         tv = (TextView)findViewById(R.id.tv);
         Animation myanim = AnimationUtils.loadAnimation(this, R.anim.mytransition);
         tv.startAnimation(myanim);
@@ -32,7 +33,5 @@ public class splash extends AppCompatActivity {
             }
         };
         timer.start();
-
-
     }
 }

@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -16,17 +17,33 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.StringRequest;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.w3c.dom.Text;
 
 import java.io.BufferedInputStream;
@@ -37,162 +54,146 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+//import static com.example.pramila.eas.JSONParser.json;
 
 
 public class profile extends AppCompatActivity {
+    TextView tvname, tvemail, tvdept, tvaddress, tvreg, tvempid;
+    String sessionid;
+    public static final int CONNECTION_TIMEOUT = 10000;
+    public static final int READ_TIMEOUT = 15000;
+    private static final String TAG_PROFILE = "user";
+    // private static final String TAG_ID = "id";
+    private static final String TAG_USERNAME = "Fname";
+    private static final String TAG_EMAIL = "Emailid";
+    private static final String TAG_ADDRESS = "District";
+    private static final String TAG_DEPARTMENT = "Department";
+    private static final String TAG_REGDATE = "regdate";
+    String result = null;
+    private static final String PROFILE_URL = "http://192.168.1.28/final/final/admin/profile.php";
+    HttpResponse httpResponse;
+    JSONObject display;
+    JSONArray user;
+    //JSONParser jsonParser = new JSONParser();
+    String StringHolder = "";
+    static JSONArray jarr = null;
+    InputStream is = null;
+    String line = null;
+    private ProgressDialog pDialog;
+    String ngalan;
+    //UserSessionManager session;
 
-   // public static final int CONNECTION_TIMEOUT = 10000;
-   // public static final int READ_TIMEOUT = 15000;
-
-   // private TextView tvemail, tvdept, tvaddress, tvreg, tvname;
-
-    //private static final String TAG = "profile";
-   SharedPreferences sharedpreferences;
-   public static final String MyPREFERENCES = "MyPrefs";
-   int backButtonCount=0;
-
-   // private static final String url = "http://192.168.1.119:8080/final/final/admin/profile2.php";
-    String urladdress="http://192.168.1.119:8080/final/final/admin/profile2.php";
-    String[] tvname;
-    String[] tvemail;
-    String[] tvdept;
-    String[] tvaddress;
-    String[] tvreg;
-    BufferedInputStream is;
-    String line=null;
-    String result=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        //session = new UserSessionManager(getApplicationContext());
 
-       /* tvemail = findViewById(R.id.tvemail);
-        tvname = findViewById(R.id.tvname);
-        tvdept = findViewById(R.id.tvdept);
-        tvreg = findViewById(R.id.tvreg);
-        tvaddress = findViewById(R.id.tvaddress);*/
+        Intent intent = getIntent();
+        sessionid = intent.getStringExtra("sessionid");
+        Log.e("eas", "sessionid:" + sessionid);
 
+       /* Toast.makeText(getApplicationContext(),
+                "User Login Status: " + session.isUserLoggedIn(),
+                Toast.LENGTH_LONG).show();
 
-        /*tvemail.setText(SharedPrefManager.getInstance(this).getUserEmail());
-        tvname.setText(SharedPrefManager.getInstance(this).getKeyUsername());
-        tvdept.setText(SharedPrefManager.getInstance(this).getKeyDepartment());
-        tvaddress.setText(SharedPrefManager.getInstance(this).getKeyAddress());
-        tvreg.setText(SharedPrefManager.getInstance(this).getKeyRegisteredDate());*/
+       if(session.checkLogin())
+            finish();
 
-        /*BottomNavigationView NavBot = (BottomNavigationView) findViewById(R.id.NavBot);
-        BottomNavigationView bottomNavigationView;
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.NavBot);
-        bottomNavigationView.setSelectedItemId(R.id.Profile);
-        NavBot.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.Home:
-                        Intent a = new Intent(profile.this, Homepage.class);
-                        startActivity(a);
-                        break;
-                    case R.id.Apply_Leave:
-                        Intent b = new Intent(profile.this, leave.class);
-                        startActivity(b);
+        HashMap<String, String> user = session.getUserDetails();
+        String sessionid = user.get(UserSessionManager.KEY_NAME);*/
 
-                        break;
-                    case R.id.Notification:
-                        Intent c = new Intent(profile.this, notification.class);
-                        startActivity(c);
-                        break;
-                    case R.id.Profile:
-                        break;
-                }
-                return false;
-            }
-        });*/
+        SharedPreferences preferences = getSharedPreferences("MYPREFS", MODE_PRIVATE);
 
+        tvname = (TextView) findViewById(R.id.tvname);
+        tvemail = (TextView) findViewById(R.id.tvemail);
+        tvdept = (TextView) findViewById(R.id.tvdept);
+        tvaddress = (TextView) findViewById(R.id.tvaddress);
+        tvreg = (TextView) findViewById(R.id.tvreg);
+        tvempid = (TextView) findViewById(R.id.tvempid);
 
         Button logout = (Button) findViewById(R.id.logout);
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-
-        //loadProfile();
-
-        StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
-        collectData();
-        //Custom customListView=new Custom(this,tvname,tvemail,tvaddress, tvreg, tvdept);
-       // TextView.setAdapter(customListView);
-    }
-
-    public void logout(View v) {
-        SharedPreferences sharedpreferences = getSharedPreferences(MainActivity.MyPREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.clear();
-        editor.commit();
-        Intent i = new Intent(profile.this, MainActivity.class);
-        startActivity(i);
-    }
-
-
-
-
-
-    /*private void loadProfile() {
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        logout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(String response) {
-
-
+            public void onClick(View v) {
+                new AsyncLogout().execute();
 
 
             }
-        })
-    }
-}
+        });
+
+        Bundle extras = getIntent().getExtras();
+        if (extras.containsKey("sessionid")) {
+            ngalan = extras.getString("sessionid");
+            // Loading Profile in Background Thread
 
 
 
-
-    //public void getusername(){
-       // final String name = tvname.getText().toString();
-       // new Asyncprofile().execute(name);
-
-    }
-    public void getemail(){
-        final String email = tvemail.getText().toString();
-        new Asyncprofile().execute(email);
-
+            new LoadProfile().execute();
+        }
+       // getJSON("http://192.168.1.98:8080/final/final/admin/profile.php");
 
     }
-    public void getdepartment(){
-        final String department = tvdept.getText().toString();
-        new Asyncprofile().execute(department);
-
-
-    }
-    public void getaddress(){
-        final String address = tvaddress.getText().toString();
-        new Asyncprofile().execute(address);
-
-
-    }
-    public void getregistereddate(){
-        final String registereddate = tvreg.getText().toString();
-        new Asyncprofile().execute(registereddate);
-
-
-    }
-
-    private class Asyncprofile<GetJSON> extends AsyncTask<String, String, String> {
+    class LoadProfile extends AsyncTask<String, String, String> {
         HttpURLConnection conn;
         URL url = null;
 
+
         @Override
-        protected String doInBackground(String... params) {
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(profile.this);
+            pDialog.setMessage("Loading profile ...");
+            pDialog.setIndeterminate(false);
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        /**
+         * getting Profile JSON
+         */
+        protected String doInBackground(String... args) {
+            // Building Parameters
+            /*String json = null;
+            try {
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair("empid", "emp2"));
+
+
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost(PROFILE_URL);
+                httppost.setEntity(new UrlEncodedFormEntity(params));
+
+                // Execute HTTP Post Request
+                HttpResponse response = httpclient.execute(httppost);
+                HttpEntity resEntity = response.getEntity();
+                json = EntityUtils.toString(resEntity);
+
+                Log.i("Profile JSON: ", json.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return json;
+        }*/
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://192.168.1.98:8080/EmpAdmin/profile.php");
+                url = new URL("http://" + Server.address + "/final/final/admin/profile.php");
+
 
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
@@ -204,37 +205,15 @@ public class profile extends AppCompatActivity {
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(READ_TIMEOUT);
                 conn.setConnectTimeout(CONNECTION_TIMEOUT);
-                conn.setRequestMethod("POST");
-
-                // setDoInput and setDoOutput method depict handling of both send and receive
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-
-                // Append parameters to URL
-                Uri.Builder builder = new Uri.Builder()
-                        .appendQueryParameter("username", params[0])
-                        .appendQueryParameter("department", params[1])
-                        .appendQueryParameter("address", params[2])
-                        .appendQueryParameter("registrationdate",params[3]);
-
-                String query = builder.build().getEncodedQuery();
-
-                // Open connection for sending data
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
-                writer.write(query);
-                writer.flush();
-                writer.close();
-                os.close();
-                conn.connect();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                conn.setRequestProperty("Cookie", sessionid);
 
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
                 return "exception";
             }
-
             try {
 
                 int response_code = conn.getResponseCode();
@@ -266,98 +245,130 @@ public class profile extends AppCompatActivity {
             } finally {
                 conn.disconnect();
             }
+        }
+        @Override
+        protected void onPostExecute (String json){
+            super.onPostExecute(json);
+            Log.e("eas","json" + json);
+                    // dismiss the dialog after getting all products
+            pDialog.dismiss();
+            try {
+                display = new JSONObject(json);
+                JSONArray Empid = display.getJSONArray("Empid");
+                JSONObject jb = Empid.getJSONObject(0);
+                String name = jb.getString("Fname");
+                String email = jb.getString("Emailid");
+                String address = jb.getString("District");
+                String department = jb.getString("Department");
+                String regdate = jb.getString("regdate");
+
+                        // displaying all data in textview
+
+                tvname.setText(  name);
+                tvemail.setText(  email);
+                tvaddress.setText(  address);
+                tvdept.setText( department);
+                tvreg.setText( regdate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+    private class AsyncLogout extends AsyncTask<String, String,String> {
+        ProgressDialog pdLoading = new ProgressDialog(profile.this);
+        HttpURLConnection conn;
+        URL url = null;
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+                // Enter URL address where your php file resides
+                url = new URL("http://"+Server.address+"/final/final/admin/logout.php");
+
+
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return e.toString();
+            }
+
+            try {
+                // Setup HttpURLConnection class to send and receive data from php and mysql
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(READ_TIMEOUT);
+                conn.setConnectTimeout(CONNECTION_TIMEOUT);
+                conn.setRequestMethod("GET");
+
+                // setDoInput and setDoOutput method depict handling of both send and receive
+                conn.setDoOutput(true);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return e.toString();
+            }
+            try{
+                int response_code = conn.getResponseCode();
+
+                // Check if successful connection made
+                if (response_code == HttpURLConnection.HTTP_OK) {
+
+                    // Read data sent from server
+                    InputStream input = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+
+                    // Pass data to onPostExecute method
+                    return (result.toString());
+
+                } else {
+
+                    return ("unsuccessful");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return e.toString();
+            } finally {
+                conn.disconnect();
+            }
 
 
         }
 
+        // this method will interact with UI, display result sent from doInBackground method
         @Override
         protected void onPostExecute(String result) {
 
-            tvemail.setText(result);
-            tvdept.setText(result);
-            tvaddress.setText(result);
-            tvreg.setText(result);
+            pdLoading.dismiss();
+            // if(result.equals("Success! This message is from PHP")) {
+            //   textPHP.setText(result.toString());
+            //}else{
+            // you to understand error returned from doInBackground method
+            super.onPostExecute(result);
 
-            Toast.makeText(getApplicationContext(), "result:" + result, Toast.LENGTH_LONG).show();
-            Log.e("eas", "Result: " + result);
-            Log.e("eas", "true found" + result);
+            Log.e("eas", result);
 
+            Toast.makeText(profile.this, result.toString(), Toast.LENGTH_LONG).show();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+            Intent i = new Intent(profile.this, MainActivity.class);
+            startActivity(i);
         }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            //this method will be running on UI thread
-
-
-
-        }
-
-
-
-    }
-}*/
-    private void collectData()
-    {
-//Connection
-        try{
-
-            URL url=new URL(urladdress);
-            HttpURLConnection con=(HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-            is=new BufferedInputStream(con.getInputStream());
-
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-        //content
-        try{
-            BufferedReader br=new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb=new StringBuilder();
-            while ((line=br.readLine())!=null){
-                sb.append(line+"\n");
-            }
-            is.close();
-            result=sb.toString();
-
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-
-        }
-
-//JSON
-        try{
-            JSONArray ja=new JSONArray(result);
-            JSONObject jo=null;
-            tvname=new String[ja.length()];
-            tvemail=new String[ja.length()];
-            tvdept=new String[ja.length()];
-            tvaddress=new String[ja.length()];
-            tvreg=new String[ja.length()];
-
-            for(int i=0;i<=ja.length();i++){
-                jo=ja.getJSONObject(i);
-                tvname[i]=jo.getString("Fname");
-                tvemail[i]=jo.getString("emailid");
-                tvdept[i]=jo.getString("department");
-                tvaddress[i]=jo.getString("District");
-                tvreg[i]=jo.getString("regdate");
-            }
-        }
-        catch (Exception ex)
-        {
-
-            ex.printStackTrace();
-        }
-
-
     }
 }
+
+
 
 
 
