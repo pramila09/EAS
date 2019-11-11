@@ -41,6 +41,8 @@ public class Leaves extends AppCompatActivity {
     String line=null;
     String result=null;
     String sessionid;
+    CustomLeaveView customLeaveView;
+    Activity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,67 +54,86 @@ public class Leaves extends AppCompatActivity {
         Log.e("eas", "sessionid:" + sessionid);
         listView=(ListView)findViewById(R.id.lview2);
 
+
         StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
         //new AsyncCollect().execute();
         CollectData();
-        CustomLeaveView customLeaveView = new CustomLeaveView(this,Fromdate,Todate,Leavetype,Description,Status);
-        listView.setAdapter(customLeaveView);
+
 
 
     }
-    public void CollectData(){
+    public void CollectData() {
+        new AsyncCollect().execute();
+    }
 
-        try {
+        class AsyncCollect extends AsyncTask<String, String, String> {
+            @Override
+            protected String doInBackground(String... strings) {
+                try {
 
-            URL url = new URL(urladdress);
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            //con.setRequestProperty("User-Agent", "Mozilla/5.0");
-            con.setRequestProperty("Cookie",sessionid);
-            is = new BufferedInputStream(con.getInputStream());
+                    URL url = new URL(urladdress);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    con.setRequestMethod("GET");
+                    //con.setRequestProperty("User-Agent", "Mozilla/5.0");
+                    con.setRequestProperty("Cookie",sessionid);
+                    is = new BufferedInputStream(con.getInputStream());
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        //content
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                //content
+                try {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    StringBuilder sb = new StringBuilder();
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line + "\n");
+                    }
+                    is.close();
+                    result = sb.toString();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    result = ex.getMessage();
+
+
+                }
+                return result;
             }
-            is.close();
-            result = sb.toString();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        @Override
+            protected void onPostExecute(String result){
+            super.onPostExecute(result);
+            Log.e("eas","result"+result);
+            try {
+                JSONArray ja = new JSONArray(result);
+                JSONObject jo = null;
+                Fromdate = new String[ja.length()];
+                Todate = new String[ja.length()];
+                Leavetype = new String[ja.length()];
+                Description = new String[ja.length()];
+                Status = new String[ja.length()];
 
+                for (int i = 0; i < ja.length(); i++) {
+                    jo = ja.getJSONObject(i);
+                    Fromdate[i] = jo.getString("fromdate");
+                    Todate[i] = jo.getString("todate");
+                    Leavetype[i] = jo.getString("leavetype");
+                    Description[i] = jo.getString("description");
+                    Status[i] = jo.getString("status");
 
-    }
-//JSON
-        try {
-            JSONArray ja = new JSONArray(result);
-            JSONObject jo = null;
-            Fromdate = new String[ja.length()];
-            Todate = new String[ja.length()];
-            Leavetype = new String[ja.length()];
-            Description = new String[ja.length()];
-            Status = new String[ja.length()];
+                }
 
-            for (int i = 0; i <= ja.length(); i++) {
-                jo = ja.getJSONObject(i);
-                Fromdate[i] = jo.getString("fromdate");
-                Todate[i] = jo.getString("todate");
-                Leavetype[i] = jo.getString("leavetype");
-                Description[i] = jo.getString("description");
-                Status[i] = jo.getString("status");
+                customLeaveView = new CustomLeaveView(Leaves.this,Fromdate,Todate,Leavetype,Description,Status);
+                listView.setAdapter(customLeaveView);
+
+            } catch (Exception ex) {
+                Log.e("eas","exception"+ex.getMessage());
+
+                ex.printStackTrace();
+
             }
-        } catch (Exception ex) {
-
-            ex.printStackTrace();
-
         }
-    }
+        }
 }
 
 

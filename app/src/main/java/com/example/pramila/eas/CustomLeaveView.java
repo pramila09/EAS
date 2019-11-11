@@ -3,6 +3,7 @@ package com.example.pramila.eas;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class CustomLeaveView extends ArrayAdapter<String> {
 
     public CustomLeaveView(Activity context,String[] Fromdate,String[] Todate, String[] Leavetype, String[] Description,String[] Status) {
         super(context, R.layout.layout2, Fromdate);
+        Log.e("eas", "fromdate"+Fromdate.length);
         this.context=context;
         this.Fromdate=Fromdate;
         this.Todate=Todate;
