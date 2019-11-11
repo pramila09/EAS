@@ -1,6 +1,7 @@
 package com.example.pramila.eas;
 
 import android.app.usage.UsageEvents;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class Attendance extends AppCompatActivity {
+    String sessionid;
 
 
     private static final String TAG = "eas";
@@ -23,6 +25,11 @@ public class Attendance extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance);
+
+        Intent intent = getIntent();
+        sessionid = intent.getStringExtra("sessionid");
+        Log.e("eas", "sessionid:" + sessionid);
+
 
 
         CalenderEvent calenderEvent = findViewById(R.id.calender_event);

@@ -15,6 +15,8 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -69,7 +71,7 @@ import java.util.Map;
 
 
 public class profile extends AppCompatActivity {
-    TextView tvname, tvemail, tvdept, tvaddress, tvreg, tvempid;
+    TextView tvname, tvemail, tvdept, tvaddress, tvreg;
     String sessionid;
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
@@ -81,7 +83,7 @@ public class profile extends AppCompatActivity {
     private static final String TAG_DEPARTMENT = "Department";
     private static final String TAG_REGDATE = "regdate";
     String result = null;
-    private static final String PROFILE_URL = "http://192.168.1.28/final/final/admin/profile.php";
+    private static final String PROFILE_URL = "http://"+Server.address+"/admin/profile.php";
     HttpResponse httpResponse;
     JSONObject display;
     JSONArray user;
@@ -106,16 +108,6 @@ public class profile extends AppCompatActivity {
         sessionid = intent.getStringExtra("sessionid");
         Log.e("eas", "sessionid:" + sessionid);
 
-       /* Toast.makeText(getApplicationContext(),
-                "User Login Status: " + session.isUserLoggedIn(),
-                Toast.LENGTH_LONG).show();
-
-       if(session.checkLogin())
-            finish();
-
-        HashMap<String, String> user = session.getUserDetails();
-        String sessionid = user.get(UserSessionManager.KEY_NAME);*/
-
         SharedPreferences preferences = getSharedPreferences("MYPREFS", MODE_PRIVATE);
 
         tvname = (TextView) findViewById(R.id.tvname);
@@ -123,7 +115,7 @@ public class profile extends AppCompatActivity {
         tvdept = (TextView) findViewById(R.id.tvdept);
         tvaddress = (TextView) findViewById(R.id.tvaddress);
         tvreg = (TextView) findViewById(R.id.tvreg);
-        tvempid = (TextView) findViewById(R.id.tvempid);
+
 
         Button logout = (Button) findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +126,16 @@ public class profile extends AppCompatActivity {
 
             }
         });
+
+        /*Button changepassword = (Button) findViewById(R.id.changepassword);
+        changepassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(profile.this, Changepassword.class);
+                intent.putExtra("sessionid", sessionid);
+                startActivity(intent);
+            }
+        });*/
 
         Bundle extras = getIntent().getExtras();
         if (extras.containsKey("sessionid")) {
@@ -166,29 +168,6 @@ public class profile extends AppCompatActivity {
          * getting Profile JSON
          */
         protected String doInBackground(String... args) {
-            // Building Parameters
-            /*String json = null;
-            try {
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair("empid", "emp2"));
-
-
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpPost httppost = new HttpPost(PROFILE_URL);
-                httppost.setEntity(new UrlEncodedFormEntity(params));
-
-                // Execute HTTP Post Request
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity resEntity = response.getEntity();
-                json = EntityUtils.toString(resEntity);
-
-                Log.i("Profile JSON: ", json.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            return json;
-        }*/
             try {
 
                 // Enter URL address where your php file resides
@@ -366,6 +345,8 @@ public class profile extends AppCompatActivity {
             startActivity(i);
         }
     }
+
+
 }
 
 

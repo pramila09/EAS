@@ -139,6 +139,13 @@ public class Homepage extends AppCompatActivity {
                                                 startActivity(intent);
                                         } else if (finalI == 4) {
                                                 Intent intent = new Intent(Homepage.this, notification.class);
+                                                intent.putExtra("sessionid", sessionid);
+                                                startActivity(intent);
+
+                                        }
+                                        else if (finalI == 5) {
+                                                Intent intent = new Intent(Homepage.this, Leaves.class);
+                                                intent.putExtra("sessionid", sessionid);
                                                 startActivity(intent);
 
                                         }

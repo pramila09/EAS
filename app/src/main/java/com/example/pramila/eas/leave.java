@@ -202,7 +202,7 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
                 String descriptionholder = description;
 
                 try {
-                    url = new URL("http://"+Server.address+"/final/final/admin/leave.php");
+                    url = new URL("http://"+Server.address+"/admin/leave.php");
                 } catch (MalformedURLException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -312,7 +312,7 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
         protected Void doInBackground(Void...arg0 ) {
 
             try {
-                URL url = new URL("http://"+Server.address+"/final/final/admin/spinner.php");
+                URL url = new URL("http://"+Server.address+"/admin/spinner.php");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.connect();
                 is = urlConnection.getInputStream();

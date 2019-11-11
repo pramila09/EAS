@@ -69,12 +69,6 @@
                 android:hint="EMAIL ADDRESS"
                 android:inputType="textEmailAddress"/>
 
-            //app:autoFill="true"
-            // app:autoSave="true"
-            // app:rememberCount="3"
-            //  app:rememberId="email"
-
-            />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout

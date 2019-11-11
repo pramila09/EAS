@@ -7,7 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".profile"
     android:orientation="vertical"
-    android:background="#FCF9F9">
+    android:background="#FCF9F9"
+    tools:menu="@menu/menu_items">
+
+
 
 
     <LinearLayout
@@ -16,6 +19,7 @@
         android:background="@color/colorPrimaryDark"
         android:orientation="vertical"
         >
+
 
         <ImageView
             android:id="@+id/imageView"
@@ -37,48 +41,14 @@
 
 
 
+
     </LinearLayout>
 
-
     <LinearLayout
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="200dp"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Employee ID "
-            android:paddingTop="15dp"
-            android:textSize="13sp"
-            android:drawableLeft="@drawable/ic_email_black_24dp"
-            />
-
-        <TextView
-            android:id="@+id/tvempid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:textColor="#2E2C2C"
-            android:textSize="18sp" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="15dp"
-            android:background="#E6E3E3"/>
-
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="280dp"
         android:layout_marginRight="30dp"
         android:orientation="vertical">
       <TextView
@@ -110,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="94dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="360dp"
+        android:layout_marginTop="280dp"
         android:layout_marginRight="30dp"
         android:orientation="vertical">
 
@@ -142,7 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
-        android:layout_marginTop="450dp"
+        android:layout_marginTop="380dp"
         android:layout_marginRight="30dp"
         android:orientation="vertical">
 
@@ -170,7 +140,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="530dp"
+        android:layout_marginTop="460dp"
         android:orientation="vertical"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp">
@@ -199,7 +169,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="600dp"
+        android:layout_marginTop="500dp"
         android:layout_gravity="center"
         android:orientation="horizontal">
 
@@ -213,6 +183,7 @@
             android:text="Log Out"
             android:textColor="#ffff"
             android:layout_marginLeft="20dp"/>
+
     </LinearLayout>
 
 

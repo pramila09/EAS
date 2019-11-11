@@ -8,10 +8,10 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    tools:context=".notification">
+    tools:context="com.example.pramila.eas.Homepage">
 
     <EditText
-        android:layout_above="@+id/register"
+        android:layout_above="@+id/buttonRegister"
         android:hint="Enter email"
         android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
@@ -20,8 +20,7 @@
     <Button
         android:layout_centerVertical="true"
         android:text="Register Device"
-        android:id="@+id/register"
-        android:onClick="sendToken"
+        android:id="@+id/buttonRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

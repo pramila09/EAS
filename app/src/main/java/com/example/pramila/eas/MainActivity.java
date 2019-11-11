@@ -91,34 +91,6 @@ public class MainActivity extends AppCompatActivity {
         etemail = (EditText) findViewById(R.id.email);
         etpassword = (EditText) findViewById(R.id.password);
 
-        /*Toast.makeText(getApplicationContext(),
-                "User Login Status: " + session.isUserLoggedIn(),
-                Toast.LENGTH_LONG).show();
-        if(session.checkLogin())
-            finish();
-
-        HashMap<String, String> user = session.getUserDetails();
-        String sessionid = user.get(UserSessionManager.KEY_NAME);*/
-/*
-        saveLoginCheckBox = (CheckBox) findViewById(R.id.saveLoginCheckBox);
-        loginPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        if(loginPreferences.getBoolean("logged",false)){
-           Intent intent = new Intent(MainActivity.this, Homepage.class);
-            startActivity(intent);
-            //MainActivity.this.finish();
-        }
-        loginPrefsEditor = loginPreferences.edit();
-
-        saveLogin = loginPreferences.getBoolean("saveLogin", false);
-        if(saveLogin == true){
-            loginPrefsEditor = loginPreferences.edit();
-            etemail.setText(loginPreferences.getString("username", ""));
-            etpassword.setText(loginPreferences.getString("password", ""));
-            saveLoginCheckBox.setChecked(true);
-        }
-        */
-
-
         btn = (Button) findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,13 +113,13 @@ public class MainActivity extends AppCompatActivity {
 
         });
         Button btnlearn = (Button) findViewById(R.id.btnlearn);
-        /*btnlearn.setOnClickListener(new View.OnClickListener() {
+        btnlearn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), learn.class);
+                Intent intent = new Intent(view.getContext(), Learn.class);
                 view.getContext().startActivity(intent);
             }
-        });*/
+        });
         /*
 
         if(prefManager.readLoginStatus())
@@ -162,11 +134,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         //getUser();
     }
-
-
-
-
-
    public void checkLogin(View arg0) {
         final String email = etemail.getText().toString();
         final String password = etpassword.getText().toString();
@@ -182,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Toast.makeText(getApplicationContext(),"result: connecting",Toast.LENGTH_LONG).show();
-       if (arg0 == btn) {
+         if (arg0 == btn) {
            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
            imm.hideSoftInputFromWindow(etemail.getWindowToken(), 0);
 
@@ -219,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://"+Server.address+"/final/final/admin/login.php");
+                url = new URL("http://"+Server.address+"/admin/login.php");
 
 
 
