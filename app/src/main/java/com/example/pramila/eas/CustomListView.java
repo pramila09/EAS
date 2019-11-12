@@ -13,13 +13,17 @@ public class CustomListView extends ArrayAdapter<String> {
 
     private String[] eventname;
     private String[] postdate;
+    private String[] place;
+    private String[] description;
     private Activity context;
 
-    public CustomListView(Activity context,String[] eventname,String[] postdate) {
+    public CustomListView(Activity context,String[] eventname,String[] postdate, String[] place, String[] description) {
         super(context, R.layout.layout, eventname);
         this.context=context;
         this.eventname=eventname;
         this.postdate=postdate;
+        this.place=place;
+        this.description=description;
     }
 
 
@@ -41,6 +45,10 @@ public class CustomListView extends ArrayAdapter<String> {
 
         viewHolder.tvw1.setText(eventname[position]);
         viewHolder.tvw2.setText(postdate[position]);
+        viewHolder.tvw3.setText(place[position]);
+        viewHolder.tvw4.setText(description[position]);
+
+
 
 
         return r;
@@ -50,11 +58,14 @@ public class CustomListView extends ArrayAdapter<String> {
 
         TextView tvw1;
         TextView tvw2;
-
+        TextView tvw3;
+        TextView tvw4;
 
         ViewHolder(View v) {
             tvw1 = (TextView) v.findViewById(R.id.tveventname);
             tvw2 = (TextView) v.findViewById(R.id.tvpostname);
+            tvw3 = (TextView) v.findViewById(R.id.tvplace);
+            tvw4 = (TextView) v.findViewById(R.id.tvdescription);
         }
     }
 }

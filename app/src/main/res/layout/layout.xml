@@ -10,6 +10,19 @@
         android:background="#ffffff"
         android:padding="15dp">
 
+        <TextView
+            android:id="@+id/tvf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginLeft="26dp"
+            android:text="Event name: "
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:textSize="20sp"
+            />
+
 
         <TextView
             android:id="@+id/tveventname"
@@ -18,9 +31,23 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="26dp"
             android:layout_marginStart="26dp"
-            android:layout_marginTop="16dp"
             android:textColor="#333"
             android:textSize="22dp"
+            android:layout_toRightOf="@+id/tvf"
+            />
+
+        <TextView
+            android:id="@+id/tvt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginLeft="26dp"
+            android:text="Start Date: "
+            android:layout_marginTop="50dp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:textSize="20sp"
             />
 
         <TextView
@@ -33,7 +60,63 @@
             android:layout_marginTop="50dp"
             android:textColor="#333"
             android:textSize="22dp"
+            android:layout_toRightOf="@+id/tvt"
             />
+
+        <TextView
+            android:id="@+id/tvs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginLeft="26dp"
+            android:text="End Date: "
+            android:layout_marginTop="98dp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/tvdescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="26dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="150dp"
+            android:textColor="#333"
+            android:textSize="22dp"
+            android:layout_toRightOf="@+id/tvs"
+            />
+
+        <TextView
+            android:id="@+id/tvl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="26dp"
+            android:layout_marginLeft="26dp"
+            android:text="Place: "
+            android:layout_marginTop="150dp"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/tvplace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="26dp"
+            android:layout_marginStart="26dp"
+            android:layout_marginTop="150dp"
+            android:textColor="#333"
+            android:textSize="22dp"
+            android:layout_toRightOf="@+id/tvl"
+            />
+
 
     </RelativeLayout>
 

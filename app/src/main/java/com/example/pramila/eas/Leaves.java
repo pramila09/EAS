@@ -119,7 +119,7 @@ public class Leaves extends AppCompatActivity {
                     Todate[i] = jo.getString("todate");
                     Leavetype[i] = jo.getString("leavetype");
                     Description[i] = jo.getString("description");
-                    Status[i] = jo.getString("status");
+                    Status[i] = jo.getString("Status");
 
                 }
 

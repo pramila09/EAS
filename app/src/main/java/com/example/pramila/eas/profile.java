@@ -171,7 +171,7 @@ public class profile extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://" + Server.address + "/final/final/admin/profile.php");
+                url = new URL("http://" + Server.address + "/admin/profile.php");
 
 
             } catch (MalformedURLException e) {
@@ -236,18 +236,18 @@ public class profile extends AppCompatActivity {
                 JSONArray Empid = display.getJSONArray("Empid");
                 JSONObject jb = Empid.getJSONObject(0);
                 String name = jb.getString("Fname");
-                String email = jb.getString("Emailid");
+                String email = jb.getString("emailid");
                 String address = jb.getString("District");
-                String department = jb.getString("Department");
+                String department = jb.getString("department");
                 String regdate = jb.getString("regdate");
 
                         // displaying all data in textview
 
-                tvname.setText(  name);
-                tvemail.setText(  email);
-                tvaddress.setText(  address);
-                tvdept.setText( department);
-                tvreg.setText( regdate);
+               tvname.setText(name);
+               tvemail.setText(email);
+               tvdept.setText(department);
+               tvaddress.setText(address);
+               tvreg.setText(regdate);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -267,7 +267,7 @@ public class profile extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://"+Server.address+"/final/final/admin/logout.php");
+                url = new URL("http://"+Server.address+"/admin/logout.php");
 
 
             } catch (MalformedURLException e) {

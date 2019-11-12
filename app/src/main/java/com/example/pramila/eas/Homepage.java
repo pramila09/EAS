@@ -127,7 +127,8 @@ public class Homepage extends AppCompatActivity {
                                                 startActivity(intent);
 
                                         } else if (finalI == 1) {
-                                                Intent intent = new Intent(Homepage.this, Attendance.class);
+                                                Intent intent = new Intent(Homepage.this, Viewattendance.class);
+                                                intent.putExtra("sessionid",sessionid);
                                                 startActivity(intent);
                                         } else if (finalI == 2) {
                                                 Intent intent = new Intent(Homepage.this, profile.class);

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="#ffffff"
+        android:padding="15dp">
+
+
+
+
+    <TextView
+        android:id="@+id/tvf"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginLeft="26dp"
+        android:text="Enroll date: "
+        android:textStyle="bold"
+        android:textColor="#333"
+        android:textSize="20sp"
+        />
+
+    <TextView
+        android:id="@+id/tvenrolldate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginLeft="26dp"
+        android:textColor="#333"
+        android:textSize="22dp"
+        android:layout_toRightOf="@+id/tvf"/>
+
+
+    <TextView
+        android:id="@+id/tvt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvenrolldate"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginLeft="26dp"
+        android:textStyle="bold"
+        android:layout_marginTop="50dp"
+        android:text="Enroll time: "
+        android:textColor="#333"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tvenrolltime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="50dp"
+        android:textColor="#333"
+        android:textSize="22dp"
+        android:layout_toRightOf="@+id/tvt"/>
+
+    </RelativeLayout>
+</LinearLayout>
