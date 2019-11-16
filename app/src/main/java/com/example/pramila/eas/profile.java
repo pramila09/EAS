@@ -116,7 +116,6 @@ public class profile extends AppCompatActivity {
         tvaddress = (TextView) findViewById(R.id.tvaddress);
         tvreg = (TextView) findViewById(R.id.tvreg);
 
-
         Button logout = (Button) findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +126,7 @@ public class profile extends AppCompatActivity {
             }
         });
 
-        /*Button changepassword = (Button) findViewById(R.id.changepassword);
+        Button changepassword = (Button) findViewById(R.id.changepassword);
         changepassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,7 +134,7 @@ public class profile extends AppCompatActivity {
                 intent.putExtra("sessionid", sessionid);
                 startActivity(intent);
             }
-        });*/
+        });
 
         Bundle extras = getIntent().getExtras();
         if (extras.containsKey("sessionid")) {

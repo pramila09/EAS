@@ -4,11 +4,8 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="16dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    tools:context="com.example.pramila.eas.Homepage">
+
+    tools:context=".notification">
 
     <EditText
         android:layout_above="@+id/buttonRegister"
@@ -23,14 +20,5 @@
         android:id="@+id/buttonRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <!-- this button is added
-    <Button
-        android:text="Send Notification"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonRegister"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/buttonSendNotification" />-->
 
 </RelativeLayout>

@@ -1,11 +1,15 @@
 package com.example.pramila.eas;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -15,6 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,12 +35,15 @@ public class notification extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog progressDialog;
 
     //URL to RegisterDevice.php
-    private static final String URL_REGISTER_DEVICE = "http://"+Server.address+"/admin/FcmExample/RegisterDevice.php";
+    private static final String URL_REGISTER_DEVICE = "http://192.168.1.119:8080/admin/RegisterDevice.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
+
+        String iidToken = FirebaseInstanceId.getInstance().getToken();
+        Log.e("Firebase", "Got token: " + iidToken);
 
         //getting views from xml
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);

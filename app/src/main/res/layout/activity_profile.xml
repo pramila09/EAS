@@ -183,6 +183,16 @@
             android:text="Log Out"
             android:textColor="#ffff"
             android:layout_marginLeft="20dp"/>
+        <Button
+            android:id="@+id/changepassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttonstylepink"
+            android:drawableRight="@drawable/ic_lock_outline_black_24dp"
+            android:gravity="center"
+            android:text="Change Password"
+            android:textColor="#ffff"
+            android:layout_marginLeft="20dp"/>
 
     </LinearLayout>
 

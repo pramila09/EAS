@@ -14,6 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -39,6 +46,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,13 +58,13 @@ public class Changepassword extends AppCompatActivity {
     private ProgressDialog pDialog;
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
-    private static String url_change_password = "http://" + Server.address + "/final/final/admin/changepasswordapp.php";
+    private static String url = "http://" + Server.address + "/final/final/admin/changepasswordapp.php";
 
 
-    EditText etoldpassword, etnewpassword;
+    EditText oldpass, newpass;
     String sessionid;
-    Button btnchange;
-    String oldpass, newpass;
+   // Button btnchange;
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,30 +76,66 @@ public class Changepassword extends AppCompatActivity {
         Log.e("eas", "sessionid:" + sessionid);
 
 
+        oldpass = (EditText) findViewById(R.id.oldpassword);
+        newpass = (EditText) findViewById(R.id.newpassword);
+        //btnchange = (Button) findViewById(R.id.btnchange);
+    }
+
+    public void change_pass(View view) {
+        ChangePass();
+    }
+
+    public void ChangePass() {
+        if (password.equals(oldpass.getText().toString())) {
+
+            SharedPreferences preferences = getSharedPreferences("MYPREFS", MODE_PRIVATE);
+            final String check = preferences.getString("myusername", "null");
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String url = "http://" + Server.address + "/admin/changepasswordapp.php";
+            StringRequest strRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("username", check);
+                    params.put("pass", newpass.getText().toString());
+
+                    return params;
+                }
+            };
+
+            queue.add(strRequest);
+        } else {
+            Toast.makeText(getApplicationContext(), "Old Passwword is not Matching", Toast.LENGTH_LONG).show();
+        }
+    }
+}
 
 
-        etoldpassword = (EditText) findViewById(R.id.oldpassword);
-        etnewpassword = (EditText) findViewById(R.id.newpassword);
-        btnchange = (Button) findViewById(R.id.btnchange);
-
-        btnchange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (etoldpassword.getText().length() <= 0) {
+            //btnchange.setOnClickListener(new View.OnClickListener() {
+            //@Override
+                /*if (etoldpassword.getText().length() <= 0) {
                     Toast.makeText(Changepassword.this, "Enter correct password", Toast.LENGTH_SHORT).show();
                 } else {
                     checkPassword(view);
-                }
-
-            }
+                }*/
 
 
-        });
 
-    }
 
-    public void checkPassword(View arg0) {
+   /* public void checkPassword(View arg0) {
         final String oldpassword = etoldpassword.getText().toString();
         final String newpassword = etnewpassword.getText().toString();
         if (oldpassword.equals("")) {

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">EAS</string>
-
+    <string name="FCM_PREF">com.example.pramila.eas.fcm_pref</string>
+    <string name="FCM_TOKEN">com.example.pramila.eas.fcm_token</string>
 
     <array name="leave">
         <item>Annual Leave</item>
