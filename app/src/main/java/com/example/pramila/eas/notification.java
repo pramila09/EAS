@@ -35,7 +35,7 @@ public class notification extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog progressDialog;
 
     //URL to RegisterDevice.php
-    private static final String URL_REGISTER_DEVICE = "http://192.168.1.119:8080/admin/RegisterDevice.php";
+    private static final String URL_REGISTER_DEVICE = "http://"+Server.address+"/admin/RegisterDevice.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

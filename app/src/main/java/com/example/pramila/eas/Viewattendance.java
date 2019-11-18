@@ -66,32 +66,34 @@ public class Viewattendance extends AppCompatActivity {
         CollectData();
 
         eText=(EditText) findViewById(R.id.editText1);
-      //  eText.setInputType(InputType.TYPE_NULL);
-      /*  eText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar cldr = Calendar.getInstance();
-                int day = cldr.get(Calendar.DAY_OF_MONTH);
-                int month = cldr.get(Calendar.MONTH);
-                int year = cldr.get(Calendar.YEAR);
-                // date picker dialog
-                picker = new DatePickerDialog(Viewattendance.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                eText.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                            }
-                        }, year, month, day);
-                picker.show();
-            }
-        });*/
+        eText.setInputType(InputType.TYPE_NULL);
+        eText.setOnClickListener(new View.OnClickListener() {
+                                     @Override
+                                     public void onClick(View v) {
+                                         final Calendar cldr = Calendar.getInstance();
+                                         int day = cldr.get(Calendar.DAY_OF_MONTH);
+                                         int month = cldr.get(Calendar.MONTH);
+                                         int year = cldr.get(Calendar.YEAR);
+                                         // date picker dialog
+                                         picker = new DatePickerDialog(Viewattendance.this,
+                                                 new DatePickerDialog.OnDateSetListener() {
+                                                     @Override
+                                                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                                         eText.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                                     }
+                                                 }, year, month, day);
+                                         picker.show();
+                                     }
+                                 });
 
         eText.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
+                Log.e("eas",cs.toString());
                 // When user changed the Text
-                Viewattendance.this.customAttendanceView.getFilter().filter(cs);
+                //Viewattendance.this.customAttendanceView.getFilter().filter(cs);
+                Viewattendance.this.customAttendanceView.getFilter().filter("2017");
             }
 
             @Override
@@ -104,16 +106,6 @@ public class Viewattendance extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable arg0) {
                 // TODO Auto-generated method stub
-            }
-        });
-
-
-        btnGet=(Button)findViewById(R.id.button1);
-        btnGet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              //  tvw.setText("Selected Date: "+ eText.getText());
-
             }
         });
 

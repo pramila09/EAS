@@ -58,13 +58,12 @@ public class Changepassword extends AppCompatActivity {
     private ProgressDialog pDialog;
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
-    private static String url = "http://" + Server.address + "/final/final/admin/changepasswordapp.php";
-
 
     EditText oldpass, newpass;
     String sessionid;
-   // Button btnchange;
     String password;
+    Button btnchange;
+    public static final String MyPREFERENCES = "MyPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,15 +77,237 @@ public class Changepassword extends AppCompatActivity {
 
         oldpass = (EditText) findViewById(R.id.oldpassword);
         newpass = (EditText) findViewById(R.id.newpassword);
-        //btnchange = (Button) findViewById(R.id.btnchange);
+        btnchange = (Button) findViewById(R.id.btnchange);
+
+        btnchange.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View view) {
+                                             change_pass(view);
+                                         }
+
+                                         public void change_pass(View view) {
+                                             ChangePass();
+                                         }
+
+
+                                         public void ChangePass() {
+                                             if (password.equals(oldpass.getText().toString())) {
+
+                                                 SharedPreferences sharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+                                                 final String check = sharedPreferences.getString("username", "null");
+                                                 RequestQueue queue = Volley.newRequestQueue(Changepassword.this);
+                                                 String url = "http://" + Server.address + "/admin/changepasswordapp.php";
+
+                                                 StringRequest strRequest = new StringRequest(Request.Method.POST, url,
+                                                         new Response.Listener<String>() {
+                                                             @Override
+                                                             public void onResponse(String response) {
+                                                                 Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+
+                                                             }
+                                                         },
+                                                         new Response.ErrorListener() {
+                                                             @Override
+                                                             public void onErrorResponse(VolleyError error) {
+
+                                                             }
+                                                         }) {
+                                                     @Override
+                                                     protected Map<String, String> getParams() {
+                                                         Map<String, String> params = new HashMap<String, String>();
+                                                         params.put("username", check);
+                                                         params.put("password", newpass.getText().toString());
+
+                                                         return params;
+                                                     }
+                                                 };
+
+                                                 queue.add(strRequest);
+                                             } else {
+                                                 Toast.makeText(getApplicationContext(), "Old Passwword is not Matching", Toast.LENGTH_LONG).show();
+                                             }
+                                         }
+                                     });
+    };
+}
+
+  //  }
+
+
+
+
+        /*btnchange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (oldpass.getText().length() <= 0) {
+                    Toast.makeText(Changepassword.this, "Enter old password", Toast.LENGTH_SHORT).show();
+                } else if (newpass.getText().length() <= 0) {
+                    Toast.makeText(Changepassword.this, "Enter new password", Toast.LENGTH_SHORT).show();
+                } else {
+                    change_pass(view);
+                }
+
+            }
+
+
+        });
     }
 
     public void change_pass(View view) {
-        ChangePass();
+        final String password = oldpass.getText().toString();
+        final String newpassword = newpass.getText().toString();
+        if (password.equals("")) {
+            //session.createUserLoginSession("sessionid");
+            Toast.makeText(this, "Password matched", Toast.LENGTH_LONG).show();
+            //prefManager.writeLoginStatus(true);
+
+        } else {
+            Toast.makeText(this, "Password change failed", Toast.LENGTH_LONG).show();
+        }
+
+        new Asyncchangepass().execute(password, newpassword);
     }
 
-    public void ChangePass() {
-        if (password.equals(oldpass.getText().toString())) {
+    private class Asyncchangepass extends AsyncTask<String, String, String> {
+        ProgressDialog pdLoading = new ProgressDialog(Changepassword.this);
+        HttpURLConnection conn;
+        URL url = null;
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String newpasswordholder=password;
+
+            try {
+
+                // Enter URL address where your php file resides
+                url = new URL("http://" + Server.address + "/admin/changepasswordapp.php");
+
+
+            } catch (MalformedURLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return "exception";
+            }
+
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+            nameValuePairs.add(new BasicNameValuePair("password", newpasswordholder));
+            try {
+
+
+                // Setup HttpURLConnection class to send and receive data from php and mysql
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(READ_TIMEOUT);
+                conn.setConnectTimeout(CONNECTION_TIMEOUT);
+                conn.setRequestMethod("POST");
+
+                // setDoInput and setDoOutput method depict handling of both send and receive
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                // Append parameters to URL
+                Uri.Builder builder = new Uri.Builder()
+                      //  .appendQueryParameter("password", params[0])
+                        .appendQueryParameter("password",newpasswordholder);
+
+                String query = builder.build().getEncodedQuery();
+
+                // Open connection for sending data
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+                conn.connect();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+                return "exception";
+            }
+
+            try {
+
+                int response_code = conn.getResponseCode();
+
+                // Check if successful connection made
+                if (response_code == HttpURLConnection.HTTP_OK) {
+
+                    // Read data sent from server
+                    InputStream input = conn.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    StringBuilder result = new StringBuilder();
+                    String line;
+
+                    while ((line = reader.readLine()) != null) {
+                        result.append(line);
+                    }
+
+                    // Pass data to onPostExecute method
+                    return (result.toString());
+
+                } else {
+
+                    return ("unsuccessful");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "exception";
+            } finally {
+                conn.disconnect();
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            pdLoading.dismiss();
+            Toast.makeText(getApplicationContext(), "result:" + result, Toast.LENGTH_LONG).show();
+            Log.e("eas", "Result: " + result);
+            Log.e("eas", "true found" + result);
+
+
+            if (result.contains("true")) {
+                /* Here launching another activity when login successful. If you persist login state
+                use sharedPreferences of Android. and logout button to clear sharedPreferences.
+                 */
+                // Log.e("eas", "" + result);
+
+                //  Toast.makeText(Changepassword.this, "Successful update", Toast.LENGTH_LONG).show();
+
+
+           /* } else if (result.contains("false")) {
+
+                // If username and password does not match display a error message
+                Toast.makeText(Changepassword.this, "Invalid password", Toast.LENGTH_LONG).show();
+
+            } else if (result.equalsIgnoreCase("exception") || result.equalsIgnoreCase("unsuccessful")) {
+
+                Toast.makeText(Changepassword.this, "OOPs! Something went wrong. Connection Problem." + result, Toast.LENGTH_LONG).show();
+
+            }
+        }*/
+
+       /* @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setMessage("\tLoading...");
+            pdLoading.setCancelable(false);
+            pdLoading.show();
+
+
+        }
+    }
+}
+*/
+/*if (password.equals(oldpass.getText().toString())) {
 
             SharedPreferences preferences = getSharedPreferences("MYPREFS", MODE_PRIVATE);
             final String check = preferences.getString("myusername", "null");
@@ -121,11 +342,11 @@ public class Changepassword extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Old Passwword is not Matching", Toast.LENGTH_LONG).show();
         }
     }
-}
+}*/
 
 
-            //btnchange.setOnClickListener(new View.OnClickListener() {
-            //@Override
+                //btnchange.setOnClickListener(new View.OnClickListener() {
+                //@Override
                 /*if (etoldpassword.getText().length() <= 0) {
                     Toast.makeText(Changepassword.this, "Enter correct password", Toast.LENGTH_SHORT).show();
                 } else {
