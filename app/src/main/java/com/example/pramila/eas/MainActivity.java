@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://"+Server.address+"/admin/login.php");
+                url = new URL("http://"+Server.address+"/project/admin/login.php");
 
 
 

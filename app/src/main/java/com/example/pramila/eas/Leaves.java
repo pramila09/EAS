@@ -30,7 +30,7 @@ import javax.security.auth.Subject;
 
 public class Leaves extends AppCompatActivity {
 
-    String urladdress="http://"+Server.address+"/admin/leaves.php";
+    String urladdress="http://"+Server.address+"/project/admin/leaves.php";
     String[] Fromdate;
     String[] Todate;
     String[] Leavetype;

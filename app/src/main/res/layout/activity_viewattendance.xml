@@ -6,23 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".Viewattendance"
     android:orientation="vertical">
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="100dp"
-       android:orientation="horizontal">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal">
 
-       <EditText
-           android:id="@+id/editText1"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginLeft="25dp"
-           android:layout_marginTop="30dp"
-           android:ems="10"
-           android:hint="Enter Date"
-           android:inputType="date"/>
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Select Date"
+        android:layout_marginTop="25dp"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"
+        />
 
-
-   </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/buttonstylepink"
+        android:text="Search"
+        android:layout_marginLeft="120dp"
+        android:textColor="#fff"
+        android:id="@+id/buttonsearch"
+        />
+</LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

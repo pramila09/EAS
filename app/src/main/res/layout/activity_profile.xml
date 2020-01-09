@@ -161,15 +161,45 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="15dp"
-            android:background="#E6E3E3"/>
+            android:background="#E6E3E3"
+/>
 
 
     </LinearLayout>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="540dp"
+        android:layout_marginRight="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_date_range_black_24dp"
+            android:text="Leave Remaining: "
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvleave"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:textColor="#2E2C2C"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
+        android:layout_marginTop="560dp"
         android:layout_gravity="center"
         android:orientation="horizontal">
 
@@ -184,6 +214,16 @@
             android:textColor="#ffff"
             android:layout_marginLeft="20dp"/>
 
+        <Button
+            android:id="@+id/changepassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttonstylepink"
+            android:drawableRight="@drawable/ic_lock_outline_black_24dp"
+            android:gravity="center"
+            android:text="Change Password"
+            android:textColor="#ffff"
+            android:layout_marginLeft="20dp"/>
 
     </LinearLayout>
 

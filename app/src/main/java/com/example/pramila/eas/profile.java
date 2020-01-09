@@ -27,8 +27,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.StringRequest;
 
@@ -71,7 +73,7 @@ import java.util.Map;
 
 
 public class profile extends AppCompatActivity {
-    TextView tvname, tvemail, tvdept, tvaddress, tvreg;
+    TextView tvname, tvemail, tvdept, tvaddress, tvreg,tvleave;
     String sessionid;
     public static final int CONNECTION_TIMEOUT = 10000;
     public static final int READ_TIMEOUT = 15000;
@@ -83,7 +85,7 @@ public class profile extends AppCompatActivity {
     private static final String TAG_DEPARTMENT = "Department";
     private static final String TAG_REGDATE = "regdate";
     String result = null;
-    private static final String PROFILE_URL = "http://"+Server.address+"/admin/profile.php";
+    private static final String PROFILE_URL = "http://"+Server.address+"/project/admin/profile.php";
     HttpResponse httpResponse;
     JSONObject display;
     JSONArray user;
@@ -94,7 +96,9 @@ public class profile extends AppCompatActivity {
     String line = null;
     private ProgressDialog pDialog;
     String ngalan;
+    Button changepassword;
     //UserSessionManager session;
+
 
 
     @Override
@@ -115,6 +119,23 @@ public class profile extends AppCompatActivity {
         tvdept = (TextView) findViewById(R.id.tvdept);
         tvaddress = (TextView) findViewById(R.id.tvaddress);
         tvreg = (TextView) findViewById(R.id.tvreg);
+        tvleave=(TextView) findViewById(R.id.tvleave);
+
+
+changepassword=(Button) findViewById(R.id.changepassword);
+changepassword.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Intent i=new Intent(profile.this, Changepassword.class);
+        i.putExtra("sessionid",sessionid);
+        startActivity(i);
+    }
+});
+
+
+
+
+
 
         Button logout = (Button) findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +168,8 @@ public class profile extends AppCompatActivity {
         }
        // getJSON("http://192.168.1.98:8080/final/final/admin/profile.php");
 
+
+
     }
     class LoadProfile extends AsyncTask<String, String, String> {
         HttpURLConnection conn;
@@ -170,7 +193,7 @@ public class profile extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://" + Server.address + "/admin/profile.php");
+                url = new URL("http://" + Server.address + "/project/admin/profile.php");
 
 
             } catch (MalformedURLException e) {
@@ -239,14 +262,16 @@ public class profile extends AppCompatActivity {
                 String address = jb.getString("District");
                 String department = jb.getString("department");
                 String regdate = jb.getString("regdate");
+                String leave = jb.getString("RemainingDays");
+
 
                         // displaying all data in textview
-
-               tvname.setText(name);
+                tvname.setText(name);
                tvemail.setText(email);
                tvdept.setText(department);
                tvaddress.setText(address);
                tvreg.setText(regdate);
+               tvleave.setText(leave);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -266,7 +291,7 @@ public class profile extends AppCompatActivity {
             try {
 
                 // Enter URL address where your php file resides
-                url = new URL("http://"+Server.address+"/admin/logout.php");
+                url = new URL("http://"+Server.address+"/project/admin/logout.php");
 
 
             } catch (MalformedURLException e) {

@@ -157,12 +157,21 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
             @Override
             public void onClick(View view) {
 
+if(mDisplayDate.getText().toString().equals("")){
+    Toast.makeText(leave.this, "Please select from date",Toast.LENGTH_LONG).show();
+}
+else if(mDisplayDate2.getText().toString().equals("")){
+    Toast.makeText(leave.this, "Please select to date",Toast.LENGTH_LONG).show();
+}
+else if(description.getText().toString().equals("")){
+    Toast.makeText(leave.this, "Please enter description",Toast.LENGTH_LONG).show();
+}
+       else {
+    getdata();
+    InsertData(tempfromdate, temptodate, temptype, tempdescription);
 
-                getdata();
-                InsertData(tempfromdate, temptodate, temptype, tempdescription);
-
-                //createleave();
-
+    //createleave();
+}
             }
 
         });
@@ -202,7 +211,7 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
                 String descriptionholder = description;
 
                 try {
-                    url = new URL("http://"+Server.address+"/admin/leave.php");
+                    url = new URL("http://"+Server.address+"/project/admin/leave.php");
                 } catch (MalformedURLException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -312,7 +321,7 @@ public class leave extends AppCompatActivity implements AdapterView.OnItemSelect
         protected Void doInBackground(Void...arg0 ) {
 
             try {
-                URL url = new URL("http://"+Server.address+"/admin/spinner.php");
+                URL url = new URL("http://"+Server.address+"/project/admin/spinner.php");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.connect();
                 is = urlConnection.getInputStream();

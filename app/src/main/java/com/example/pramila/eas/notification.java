@@ -1,14 +1,20 @@
 package com.example.pramila.eas;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,36 +30,71 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-public class notification extends AppCompatActivity implements View.OnClickListener {
+public class notification extends AppCompatActivity {
+    TextView tvtitle;
+    String txtTitle, txtMessage;
 
-    //defining views
-    private Button buttonRegister;
-    private EditText editTextEmail;
-    private ProgressDialog progressDialog;
+    String sessionid;
+    public static final int CONNECTION_TIMEOUT = 10000;
+    public static final int READ_TIMEOUT = 15000;
+    TextView title,message,tvregister;
 
-    //URL to RegisterDevice.php
-    private static final String URL_REGISTER_DEVICE = "http://"+Server.address+"/admin/RegisterDevice.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
-        String iidToken = FirebaseInstanceId.getInstance().getToken();
-        Log.e("Firebase", "Got token: " + iidToken);
+        Intent intent = getIntent();
+        sessionid = intent.getStringExtra("sessionid");
+        Log.e("eas", "sessionid:" + sessionid);
 
-        //getting views from xml
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        buttonRegister = (Button) findViewById(R.id.buttonRegister);
+title=(TextView)findViewById(R.id.tvtitle);
+        if (title != null) {
+            Bundle extras = getIntent ().getExtras ();
+            StringBuilder keys = new StringBuilder();
+            if (extras != null) {
+                for (String key : extras.keySet())
+                    keys.append(key + " = " + extras.getString(key) + "\n ");
+            }
+            title.setText("extras on second activity: " + keys.toString());
+        }
+message=(TextView)findViewById(R.id.tvmessage);
+        final String MY_PREFS_NAME = "MyFCMFile";
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        String txtTitle = prefs.getString("Title", "");//"No name defined" is the default value.
+        String txtMessage = prefs.getString("Message", "");//"No name defined" is the default value.
 
-        //adding listener to view
-        buttonRegister.setOnClickListener(this);
+        title.setText(txtTitle);
+        message.setText(txtMessage);
+
+        tvregister=(TextView)findViewById(R.id.tvregister);
+        tvregister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(notification.this,Notificationregister.class);
+                myIntent.putExtra("sessionid",sessionid);
+                startActivity(myIntent);
+            }
+        });
+
     }
+}
 
-    //storing token to mysql server
+
+
+
+   /* //storing token to mysql server
     private void sendTokenToServer() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Registering Device...");
@@ -106,5 +147,4 @@ public class notification extends AppCompatActivity implements View.OnClickListe
         if (view == buttonRegister) {
             sendTokenToServer();
         }
-    }
-}
+    }*/
